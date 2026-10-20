@@ -30,7 +30,7 @@ const findSource = (id) => {
 };
 
 /** Largest rect with the target aspect that fits the source, centred on the focal point, clamped to the edges. */
-function cropRect(srcW, srcH, [rw, rh], [fx, fy]) {
+function cropRect(srcW, srcH, [rw, rh], [fx, fy], zoom = 1) {
   const target = rw / rh;
   let w = srcW;
   let h = Math.round(srcW / target);
@@ -38,6 +38,8 @@ function cropRect(srcW, srcH, [rw, rh], [fx, fy]) {
     h = srcH;
     w = Math.round(srcH * target);
   }
+  w = Math.round(w * zoom);
+  h = Math.round(h * zoom);
   const left = Math.min(Math.max(Math.round(fx * srcW - w / 2), 0), srcW - w);
   const top = Math.min(Math.max(Math.round(fy * srcH - h / 2), 0), srcH - h);
   return { left, top, width: w, height: h };
@@ -52,12 +54,12 @@ function outputSize(crop, [tw, th]) {
 
 const toHex = ({ r, g, b }) => '#' + [r, g, b].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('');
 
-async function render(srcPath, ratio, size, focal) {
+async function render(srcPath, ratio, size, focal, zoom = 1) {
   const base = sharp(srcPath).rotate();
   const meta = await base.metadata();
   const w = meta.autoOrient?.width ?? meta.width;
   const h = meta.autoOrient?.height ?? meta.height;
-  const crop = cropRect(w, h, ratio, focal);
+  const crop = cropRect(w, h, ratio, focal, zoom);
   const out = outputSize(crop, size);
   const buffer = await sharp(srcPath)
     .rotate()
@@ -109,7 +111,7 @@ for (const d of derived) {
     manifest[d.id] = null;
     continue;
   }
-  const { buffer, out } = await render(src, d.ratio, d.size, d.focal);
+  const { buffer, out } = await render(src, d.ratio, d.size, d.focal, d.zoom ?? 1);
   manifest[d.id] = await write(d.id, buffer, out);
   report.push(`  ↳ ${d.id.padEnd(18)} from ${d.from} → ${out.width}×${out.height}`);
 }

@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/unit/",
+    "test": "node --test \"tests/unit/**/*.test.ts\"",
     "images": "node scripts/process-images.mjs",
     "prompts": "node scripts/build-image-prompts.mjs"
   },

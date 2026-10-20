@@ -280,20 +280,21 @@ export const video = {
 
 /**
  * Derived crops made from the generated images (no extra prompts needed).
- * @type {{ id: string, from: string, ratio: [number, number], size: [number, number], focal: [number, number] }[]}
+ * @type {{ id: string, from: string, ratio: [number, number], size: [number, number], focal: [number, number], zoom?: number }[]}
  */
 export const derived = [
   { id: 'ig-haldi', from: 'story-haldi', ratio: [1, 1], size: [1080, 1080], focal: [0.55, 0.42] },
   { id: 'ig-mehendi', from: 'story-mehendi', ratio: [1, 1], size: [1080, 1080], focal: [0.42, 0.5] },
   { id: 'ig-sangeet', from: 'story-sangeet', ratio: [1, 1], size: [1080, 1080], focal: [0.5, 0.4] },
   { id: 'ig-lagna', from: 'story-lagna', ratio: [1, 1], size: [1080, 1080], focal: [0.45, 0.42] },
-  { id: 'ig-reception', from: 'story-reception', ratio: [1, 1], size: [1080, 1080], focal: [0.5, 0.58] },
+  { id: 'ig-reception', from: 'story-reception', ratio: [1, 1], size: [1080, 1080], focal: [0.5, 0.45] },
   { id: 'ig-prewedding', from: 'story-prewedding', ratio: [1, 1], size: [1080, 1080], focal: [0.5, 0.55] },
   { id: 'svc-candid', from: 'story-haldi', ratio: [4, 5], size: [1280, 1600], focal: [0.55, 0.42] },
   { id: 'svc-prewedding', from: 'story-prewedding', ratio: [4, 5], size: [1280, 1600], focal: [0.5, 0.55] },
   { id: 'svc-traditional', from: 'story-lagna', ratio: [4, 5], size: [1280, 1600], focal: [0.45, 0.4] },
-  { id: 'pill-antarpat', from: 'story-lagna', ratio: [3, 1], size: [600, 200], focal: [0.45, 0.32] },
-  { id: 'pill-paithani', from: 'detail-paithani', ratio: [3, 1], size: [600, 200], focal: [0.5, 0.5] },
+  { id: 'dot-antarpat', from: 'story-lagna', ratio: [1, 1], size: [240, 240], focal: [0.41, 0.42], zoom: 0.4 },
+  { id: 'dot-haldi', from: 'story-haldi', ratio: [1, 1], size: [240, 240], focal: [0.6, 0.31], zoom: 0.36 },
+  { id: 'dot-paithani', from: 'detail-paithani', ratio: [1, 1], size: [240, 240], focal: [0.44, 0.44], zoom: 0.45 },
 ];
 
 /** Social preview crop (written to src/app/opengraph-image.jpg + twitter-image.jpg). */
