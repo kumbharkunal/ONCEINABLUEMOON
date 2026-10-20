@@ -382,7 +382,7 @@ html.marathi-ready {
   }
 }
 
-/* ───────────── Intro loader (first visit, CSS only, ≤ 1.2 s) ───────────── */
+/* ───────────── Intro loader (first visit, CSS only, 0.9 s) ───────────── */
 .intro {
   display: none;
 }
@@ -394,19 +394,19 @@ html[data-intro="play"] .intro {
   z-index: var(--z-loader);
   background: var(--color-paper);
   pointer-events: none;
-  animation: intro-out 0.45s var(--ease-in-out) 0.75s both;
+  animation: intro-out 0.35s var(--ease-in-out) 0.55s both;
 }
 html[data-intro="play"] .intro-moon {
-  animation: intro-moon-grow 0.5s var(--ease-in) 0.7s both;
+  animation: intro-moon-grow 0.4s var(--ease-in) 0.5s both;
 }
 html[data-intro="play"] .intro-disc {
-  animation: intro-tint 0.6s var(--ease-in-out) 0.15s both;
+  animation: intro-tint 0.45s var(--ease-in-out) 0.1s both;
 }
 html[data-intro="play"] .intro-shadow {
-  animation: intro-wax 0.7s var(--ease-in-out) both;
+  animation: intro-wax 0.55s var(--ease-in-out) both;
 }
 html[data-intro="play"] .intro-word {
-  animation: intro-word 0.7s var(--ease-out) both;
+  animation: intro-word 0.55s var(--ease-out) both;
 }
 @keyframes intro-wax {
   from {
@@ -618,7 +618,7 @@ html.is-locked body {
   --intro-delay: 0s;
 }
 html[data-intro="play"] {
-  --intro-delay: 0.85s;
+  --intro-delay: 0.65s;
 }
 .hero-track {
   position: relative;

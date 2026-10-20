@@ -11,6 +11,8 @@ import { chatMessage, waLink } from '@/lib/whatsapp';
 import { lockScroll, scrollToId, unlockScroll } from '@/lib/scroll';
 import { cn } from '@/lib/cn';
 
+// Loaded right after hydration (not at first tap): the menu's open state *is* its animation, so the
+// features must already be here when someone reaches for it.
 const loadFeatures = () => import('@/components/motion/features').then((r) => r.default);
 const spring = { type: 'spring', stiffness: 380, damping: 34 } as const;
 const EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];

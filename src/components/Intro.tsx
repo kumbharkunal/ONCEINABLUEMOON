@@ -1,5 +1,5 @@
 /**
- * First-visit intro (CSS only, ≤ 1.2 s): a chandrakor fills into a full blue moon, then grows and dissolves
+ * First-visit intro (CSS only, 0.9 s): a chandrakor fills into a full blue moon, then grows and dissolves
  * into the hero, which is already painted underneath (so it never delays LCP). Shown only when the
  * inline head script sets html[data-intro="play"]; never under reduced motion.
  */
