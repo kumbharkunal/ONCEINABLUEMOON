@@ -1,0 +1,16 @@
+# Local-only material never uploaded by `vercel deploy` (Git deploys only see committed files anyway).
+/image-inbox/
+/.taste-skill/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/.lighthouse/
+/qa/
+/.next/
+/out/
+/coverage/
+.env*
+*.tsbuildinfo
+# Over the phone budget and skipped by the build (see README, "Hero video").
+/public/videos/hero-reel-mobile.mp4
