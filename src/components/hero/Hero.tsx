@@ -1,4 +1,5 @@
 import { getImageProps } from 'next/image';
+import { preload } from 'react-dom';
 import { imageManifest } from '@/generated/images';
 import { heroReel } from '@/generated/media';
 import { Crescent } from '@/components/brand/MoonMark';
@@ -22,6 +23,9 @@ const HERO_SUBJECT = { x: 0.53, y: 0.31 };
  * out of frame. Remove when a clean reel is supplied.
  */
 const REEL_CROP = { scale: 1.22, x: 0.25, y: 0.3 };
+
+const DESKTOP = '(min-width: 64rem)';
+const MOBILE = '(max-width: 63.99rem)';
 const cropped = (v: number, o: number) => o + (v - o) * REEL_CROP.scale;
 
 function HeroPicture() {
@@ -43,10 +47,14 @@ function HeroPicture() {
     ?.split(', ')
     .filter((c) => Number(c.slice(c.lastIndexOf(' ') + 1, -1)) <= 1080)
     .join(', ');
+  // Preload each art-directed source from <head>, ahead of the scripts, so the photo (the LCP) is already
+  // in hand when the first frame paints. Same srcset/sizes as the <source> elements, so the request is reused.
+  preload(img.src, { as: 'image', imageSrcSet: mobileSrcSet, imageSizes: '100vw', fetchPriority: 'high', media: MOBILE });
+  if (desktopSrcSet) preload(desktopSrcSet.split(' ')[0], { as: 'image', imageSrcSet: desktopSrcSet, imageSizes: '100vw', fetchPriority: 'high', media: DESKTOP });
   return (
     <picture>
-      <source media="(min-width: 64rem)" srcSet={desktopSrcSet} sizes="100vw" />
-      <source media="(max-width: 63.99rem)" srcSet={mobileSrcSet} sizes="100vw" />
+      <source media={DESKTOP} srcSet={desktopSrcSet} sizes="100vw" />
+      <source media={MOBILE} srcSet={mobileSrcSet} sizes="100vw" />
       {/* eslint-disable-next-line jsx-a11y/alt-text -- alt is in the spread props */}
       <img
         {...img}

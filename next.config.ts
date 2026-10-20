@@ -23,7 +23,8 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
     qualities: [60, 75],
     // Fewer candidate widths = shorter srcset strings (they appear in the HTML and the RSC payload).
-    deviceSizes: [640, 828, 1080, 1440, 1920, 2560],
+    // 750 fits the common 412px × 1.75 Android screen (721 device px) without jumping to 828.
+    deviceSizes: [640, 750, 828, 1080, 1440, 1920, 2560],
     imageSizes: [96, 256, 384],
     remotePatterns: [new URL('https://i.ytimg.com/vi/**')],
     minimumCacheTTL: 2678400,
