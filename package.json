@@ -3,10 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/media-manifest.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/media-manifest.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/unit/",
+    "images": "node scripts/process-images.mjs",
+    "prompts": "node scripts/build-image-prompts.mjs"
   },
   "dependencies": {
     "@gsap/react": "2.1.2",
@@ -31,5 +37,8 @@
     "sharp": "0.35.5",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20.9.0"
   }
 }
