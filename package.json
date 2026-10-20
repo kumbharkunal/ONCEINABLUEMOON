@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test \"tests/unit/**/*.test.ts\"",
     "images": "node scripts/process-images.mjs",
+    "icons": "node scripts/build-icons.mjs",
     "prompts": "node scripts/build-image-prompts.mjs"
   },
   "dependencies": {

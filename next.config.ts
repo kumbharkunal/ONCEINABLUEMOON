@@ -6,6 +6,11 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  experimental: {
+    // One page, Tailwind, first-time visitors from a WhatsApp link: inline the CSS (no render-blocking request).
+    inlineCss: true,
+    optimizePackageImports: ['motion', 'gsap'],
+  },
   turbopack: {
     rules: {
       '*.css': {
@@ -17,6 +22,9 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
     qualities: [60, 75],
+    // Fewer candidate widths = shorter srcset strings (they appear in the HTML and the RSC payload).
+    deviceSizes: [640, 828, 1080, 1440, 1920, 2560],
+    imageSizes: [96, 256, 384],
     remotePatterns: [new URL('https://i.ytimg.com/vi/**')],
     minimumCacheTTL: 2678400,
   },

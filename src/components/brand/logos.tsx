@@ -1,4 +1,6 @@
 // Official brand glyphs (paths from Simple Icons, CC0), in their official colours. Never recolour them.
+// Defined once as an SVG sprite (BrandDefs, in the root layout) and referenced with <use>, so each logo
+// costs a few bytes wherever it appears.
 import { cn } from '@/lib/cn';
 
 type LogoProps = { className?: string; title?: string };
@@ -18,7 +20,7 @@ const WA_PATH =
 const YT_PATH =
   'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z';
 
-/** One shared gradient definition for every Instagram glyph (rendered once in the root layout). */
+/** The sprite: one gradient and one symbol per logo, rendered once in the root layout. */
 export function BrandDefs() {
   return (
     <svg width="0" height="0" className="absolute" aria-hidden="true" focusable="false">
@@ -30,51 +32,40 @@ export function BrandDefs() {
           <stop offset="0.72" stopColor="#962FBF" />
           <stop offset="1" stopColor="#4F5BD5" />
         </radialGradient>
+        <symbol id="logo-ig" viewBox="0 0 24 24">
+          <path d={IG_PATH} fill="url(#ig-gradient)" />
+        </symbol>
+        <symbol id="logo-fb" viewBox="0 0 24 24">
+          <circle cx="12" cy="12.044" r="11.6" fill="#FFFFFF" />
+          <path d={FB_PATH} fill="#0866FF" />
+        </symbol>
+        <symbol id="logo-wa" viewBox="0 0 24 24">
+          <path d={WA_PATH} fill="#25D366" />
+        </symbol>
+        <symbol id="logo-wa-white" viewBox="0 0 24 24">
+          <path d={WA_PATH} fill="#FFFFFF" />
+        </symbol>
+        <symbol id="logo-yt" viewBox="0 0 24 24">
+          <path d="M9.545 15.568V8.432L15.818 12z" fill="#FFFFFF" />
+          <path d={YT_PATH} fill="#FF0000" />
+        </symbol>
       </defs>
     </svg>
   );
 }
 
-export function InstagramLogo({ className, title }: LogoProps) {
+function Logo({ id, className, title }: LogoProps & { id: string }) {
   return (
     <svg viewBox="0 0 24 24" className={cn('shrink-0', className)} {...a11y(title)}>
-      <path d={IG_PATH} fill="url(#ig-gradient)" />
+      <use href={`#${id}`} />
     </svg>
   );
 }
 
-export function FacebookLogo({ className, title }: LogoProps) {
-  return (
-    <svg viewBox="0 0 24 24" className={cn('shrink-0', className)} {...a11y(title)}>
-      <circle cx="12" cy="12.044" r="11.6" fill="#FFFFFF" />
-      <path d={FB_PATH} fill="#0866FF" />
-    </svg>
-  );
-}
-
+export const InstagramLogo = (p: LogoProps) => <Logo id="logo-ig" {...p} />;
+export const FacebookLogo = (p: LogoProps) => <Logo id="logo-fb" {...p} />;
 /** WhatsApp glyph in WhatsApp green (use on light grounds). */
-export function WhatsAppLogo({ className, title }: LogoProps) {
-  return (
-    <svg viewBox="0 0 24 24" className={cn('shrink-0', className)} {...a11y(title)}>
-      <path d={WA_PATH} fill="#25D366" />
-    </svg>
-  );
-}
-
+export const WhatsAppLogo = (p: LogoProps) => <Logo id="logo-wa" {...p} />;
 /** White WhatsApp glyph for use on a WhatsApp-green circle. */
-export function WhatsAppGlyphWhite({ className, title }: LogoProps) {
-  return (
-    <svg viewBox="0 0 24 24" className={cn('shrink-0', className)} {...a11y(title)}>
-      <path d={WA_PATH} fill="#FFFFFF" />
-    </svg>
-  );
-}
-
-export function YouTubeLogo({ className, title }: LogoProps) {
-  return (
-    <svg viewBox="0 0 24 24" className={cn('shrink-0', className)} {...a11y(title)}>
-      <path d="M9.545 15.568V8.432L15.818 12z" fill="#FFFFFF" />
-      <path d={YT_PATH} fill="#FF0000" />
-    </svg>
-  );
-}
+export const WhatsAppGlyphWhite = (p: LogoProps) => <Logo id="logo-wa-white" {...p} />;
+export const YouTubeLogo = (p: LogoProps) => <Logo id="logo-yt" {...p} />;

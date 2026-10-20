@@ -20,7 +20,8 @@ export function Footer() {
           ))}
         </ul>
 
-        <p id="footer-title" className="footer-mark font-display" aria-label={site.name} data-footer-mark>
+        <p id="footer-title" className="footer-mark font-display" data-footer-mark>
+          <span className="sr-only">{site.name}</span>
           <span className="footer-mark-line" aria-hidden="true">
             <span className="footer-o" data-footer-o>
               <svg viewBox="0 0 24 24" className="size-full" focusable="false">

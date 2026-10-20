@@ -12,6 +12,13 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local QA output and scratch tooling (gitignored).
+    "qa/**",
+    "test-results/**",
+    "playwright-report/**",
+    "blob-report/**",
+    ".taste-skill/**",
+    "image-inbox/**",
   ]),
 ]);
 

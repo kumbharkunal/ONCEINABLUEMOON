@@ -21,6 +21,9 @@ type Props = {
   style?: React.CSSProperties;
 };
 
+/** A caller that positions the frame itself (absolute/fixed/sticky) must not also get `relative`. */
+const isPositioned = (className?: string) => /(^|\s)(absolute|fixed|sticky)(\s|$)/.test(className ?? '');
+
 /**
  * Renders a processed image from the manifest, or an elegant tonal placeholder while the
  * real file has not been generated yet (so nothing ever breaks).
@@ -41,15 +44,16 @@ export function SmartImage({
   const Tag = as;
   if (!entry) return <Placeholder alt={alt} className={className} as={as} quiet={quietPlaceholder} style={style} />;
   return (
-    <Tag className={cn('relative block overflow-hidden', className)} style={{ backgroundColor: entry.color, ...style }}>
+    <Tag
+      className={cn(!isPositioned(className) && 'relative', as === 'span' ? 'inline-block' : 'block', 'overflow-hidden', className)}
+      style={{ backgroundColor: entry.color, ...style }}
+    >
       <Image
         src={entry.src}
         alt={alt}
         fill
         sizes={sizes}
         quality={quality}
-        placeholder="blur"
-        blurDataURL={entry.blurDataURL}
         loading={priority ? 'eager' : 'lazy'}
         fetchPriority={priority ? 'high' : undefined}
         className={cn('object-cover', imgClassName)}
@@ -76,7 +80,12 @@ export function Placeholder({
     <Tag
       role="img"
       aria-label={`${alt} (photograph coming soon)`}
-      className={cn('placeholder relative isolate block overflow-hidden bg-sand', className)}
+      className={cn(
+        'placeholder isolate overflow-hidden bg-sand',
+        as === 'span' ? 'inline-block' : 'block',
+        !isPositioned(className) && 'relative',
+        className,
+      )}
       style={style}
     >
       <MoonMark className="absolute left-1/2 top-1/2 size-[clamp(18px,14%,64px)] -translate-x-1/2 -translate-y-1/2 text-ink/15" />

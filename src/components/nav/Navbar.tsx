@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { LazyMotion, MotionConfig, m } from 'motion/react';
+import { LazyMotion, MotionConfig } from 'motion/react';
+import * as m from 'motion/react-m';
 import { MoonMark } from '@/components/brand/MoonMark';
 import { FacebookLogo, InstagramLogo, WhatsAppLogo, YouTubeLogo } from '@/components/brand/logos';
 import { MoonProgress } from '@/components/nav/MoonProgress';
@@ -388,7 +389,7 @@ export function Navbar() {
                     <YouTubeLogo className="size-7" />
                   </a>
                 </div>
-                <a href={`tel:${site.phone}`} className="link text-small text-ink">
+                <a href={`tel:${site.phone}`} className="link-reverse inline-flex min-h-11 items-center text-small text-ink">
                   {site.phoneDisplay}
                 </a>
               </div>

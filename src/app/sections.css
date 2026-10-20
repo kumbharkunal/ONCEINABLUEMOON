@@ -38,12 +38,15 @@
   translate: -50% -50%;
   pointer-events: none;
 }
-.manifesto-moon-shadow {
-  fill: var(--color-cream);
+.manifesto-moon-ring {
+  fill: none;
+  stroke: var(--color-champagne);
+  stroke-width: 1;
+  opacity: 0.45;
 }
 .manifesto-moon-lit {
   fill: var(--color-moon-glow);
-  opacity: 0.32;
+  opacity: 0.3;
 }
 .manifesto-text {
   margin-top: 28px;
@@ -80,11 +83,27 @@
 /* ───────────── Trust line ───────────── */
 .trust-row {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+/* Phones and tablets: each fact is a stadium pill (the moon's family); desktop: discs. */
+.trust-row > .trust-disc {
+  aspect-ratio: auto;
+  border-radius: 999px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
   gap: 12px;
+  padding: 14px 24px;
+  text-align: left;
+}
+.trust-row > .trust-disc > svg {
+  margin: 0;
+}
+.trust-row > .trust-disc > .font-display {
+  margin-left: auto;
 }
 .trust-head {
-  grid-column: 1 / -1;
   display: grid;
   place-items: center;
   min-height: 92px;
@@ -101,7 +120,7 @@
   align-items: center;
   justify-content: center;
   gap: 2px;
-  padding: 16%;
+  padding: 12%;
   text-align: center;
 }
 .trust-disc .font-display {
@@ -109,7 +128,10 @@
 }
 @media (min-width: 48rem) {
   .trust-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .trust-head {
+    grid-column: 1 / -1;
   }
 }
 @media (min-width: 64rem) {
@@ -122,6 +144,21 @@
     grid-column: auto;
     aspect-ratio: 2 / 1;
     min-height: 0;
+  }
+  .trust-row > .trust-disc {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    padding: 12%;
+    text-align: center;
+  }
+  .trust-row > .trust-disc > svg {
+    margin-bottom: 8px;
+  }
+  .trust-row > .trust-disc > .font-display {
+    margin-left: 0;
   }
 }
 
@@ -662,8 +699,9 @@
   grid-template-rows: 0fr;
   transition: grid-template-rows 0.45s var(--ease-out);
 }
-.process-panel > * {
+.process-panel-inner {
   overflow: hidden;
+  min-height: 0;
 }
 .process-step.is-open .process-panel {
   grid-template-rows: 1fr;
@@ -724,6 +762,10 @@
     font-size: 1.25rem;
     font-family: var(--font-sans);
     font-weight: 600;
+  }
+  .process-step.is-open .process-trigger {
+    justify-content: flex-start;
+    gap: 24px;
   }
   .process-step.is-open .process-name {
     font-size: var(--text-h2);
@@ -910,6 +952,23 @@
 .about-right .btn {
   justify-self: start;
 }
+@media (max-width: 63.99rem) {
+  .about-panel {
+    gap: 0;
+  }
+  .about-left {
+    display: contents;
+  }
+  .about-circle {
+    order: 10;
+    justify-self: center;
+    margin-top: 8px;
+  }
+  .about-right {
+    order: 5;
+    margin-top: 40px;
+  }
+}
 @media (min-width: 64rem) {
   .about-panel {
     grid-template-columns: 56fr 44fr;
@@ -989,20 +1048,20 @@
     margin: 0 -18px;
   }
   .kind-slip-1 {
-    min-height: 440px;
+    min-height: 340px;
     rotate: -4deg;
     margin-top: 24px;
   }
   .kind-slip-2 {
-    min-height: 520px;
+    min-height: 400px;
     rotate: 2deg;
     margin-top: 72px;
   }
   .kind-slip-3 {
-    min-height: 600px;
+    min-height: 470px;
     rotate: 5deg;
     margin-top: 8px;
-    margin-bottom: -160px;
+    margin-bottom: -110px;
   }
 }
 
@@ -1106,6 +1165,10 @@
 .coupon-caption {
   padding: 0 4px;
 }
+/* ink-soft on moon-glow is 4.4:1; everything on the coupon uses full ink. */
+.coupon .text-ink-soft {
+  color: var(--color-ink);
+}
 .coupon-form {
   padding: 28px 16px 32px;
 }
@@ -1178,7 +1241,7 @@ fieldset {
 }
 .footer-mark {
   margin-top: clamp(28px, 4vw, 56px);
-  font-size: clamp(3.4rem, 19vw, 21rem);
+  font-size: clamp(3.4rem, 22vw, 21rem);
   line-height: 0.9;
   letter-spacing: -0.02em;
   color: var(--color-ink);
@@ -1206,6 +1269,11 @@ fieldset {
 }
 .footer-o-lit {
   fill: var(--color-moon);
+}
+@media (min-width: 48rem) {
+  .footer-mark {
+    font-size: clamp(3.4rem, 19vw, 21rem);
+  }
 }
 .footer-grid {
   margin-top: clamp(40px, 5vw, 72px);

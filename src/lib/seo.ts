@@ -13,7 +13,7 @@ export function localBusinessJsonLd(siteUrl: string): WithContext<LocalBusiness>
     slogan: site.tagline,
     url: siteUrl,
     image: `${siteUrl}/opengraph-image.jpg`,
-    logo: `${siteUrl}/icon.svg`,
+    logo: `${siteUrl}/apple-icon.png`,
     telephone: site.phone,
     email: site.email,
     address: {

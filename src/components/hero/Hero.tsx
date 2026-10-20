@@ -16,6 +16,14 @@ const ALT =
  */
 const HERO_SUBJECT = { x: 0.53, y: 0.31 };
 
+/**
+ * While a desktop reel exists, the still and the reel share one crop (scale about an origin) so the
+ * crossfade is seamless and the reel's bottom-right corner (it carries a visible generator mark) stays
+ * out of frame. Remove when a clean reel is supplied.
+ */
+const REEL_CROP = { scale: 1.22, x: 0.25, y: 0.3 };
+const cropped = (v: number, o: number) => o + (v - o) * REEL_CROP.scale;
+
 function HeroPicture() {
   const desktop = imageManifest['hero-desktop'] ?? imageManifest['hero-mobile'];
   const mobile = imageManifest['hero-mobile'] ?? imageManifest['hero-desktop'];
@@ -23,13 +31,18 @@ function HeroPicture() {
     // No photograph yet: the aperture shows a literal blue moon, which reads as intentional.
     return <div role="img" aria-label="A blue moon (the hero photograph is coming soon)" className="hero-moon-fill absolute inset-0" />;
   }
-  const common = { alt: ALT, sizes: '100vw', quality: 75 as const };
   const {
     props: { srcSet: desktopSrcSet },
-  } = getImageProps({ ...common, src: desktop.src, width: desktop.width, height: desktop.height });
+  } = getImageProps({ alt: ALT, sizes: '100vw', quality: 75, src: desktop.src, width: desktop.width, height: desktop.height });
+  // Phones: q60 (a third lighter, visually identical at phone size) and nothing wider than 1080w, so a 3×
+  // screen doesn't pull a 1440w file for a 390px-wide window.
   const {
-    props: { srcSet: mobileSrcSet, ...img },
-  } = getImageProps({ ...common, src: mobile.src, width: mobile.width, height: mobile.height });
+    props: { srcSet: mobileAll, ...img },
+  } = getImageProps({ alt: ALT, sizes: '100vw', quality: 60, src: mobile.src, width: mobile.width, height: mobile.height });
+  const mobileSrcSet = mobileAll
+    ?.split(', ')
+    .filter((c) => Number(c.slice(c.lastIndexOf(' ') + 1, -1)) <= 1080)
+    .join(', ');
   return (
     <picture>
       <source media="(min-width: 64rem)" srcSet={desktopSrcSet} sizes="100vw" />
@@ -57,22 +70,29 @@ function PlayGlyph({ className }: { className?: string }) {
 
 export function Hero() {
   const hasVideo = Boolean(heroReel.desktop || heroReel.mobile);
+  const subject = heroReel.desktop
+    ? { x: cropped(HERO_SUBJECT.x, REEL_CROP.x), y: cropped(HERO_SUBJECT.y, REEL_CROP.y) }
+    : HERO_SUBJECT;
+  const cropStyle = heroReel.desktop
+    ? ({ '--crop-s': REEL_CROP.scale, '--crop-x': `${REEL_CROP.x * 100}%`, '--crop-y': `${REEL_CROP.y * 100}%` } as React.CSSProperties)
+    : undefined;
   return (
     <section id="top" aria-labelledby="hero-title" className="hero relative">
       <div className="hero-track" data-hero-track>
         <div className="hero-stage">
           <div className="hero-media" data-hero-media>
-            <div className="hero-zoom" style={{ '--fx': HERO_SUBJECT.x, '--fy': HERO_SUBJECT.y } as React.CSSProperties}>
+            <div className="hero-zoom" style={{ '--fx': subject.x, '--fy': subject.y } as React.CSSProperties}>
               <div className="hero-scroll" data-hero-scroll>
-                <div
-                  className="hero-still hero-drift"
-                  data-reel-desktop={heroReel.desktop ? 'true' : undefined}
-                  data-reel-mobile={heroReel.mobile ? 'true' : undefined}
-                >
-                  <HeroPicture />
+                <div className="hero-crop" style={cropStyle}>
+                  <div
+                    className="hero-still hero-drift"
+                    data-reel-desktop={heroReel.desktop ? 'true' : undefined}
+                    data-reel-mobile={heroReel.mobile ? 'true' : undefined}
+                  >
+                    <HeroPicture />
+                  </div>
+                  {hasVideo ? <HeroVideo desktop={heroReel.desktop} mobile={heroReel.mobile} /> : null}
                 </div>
-                {hasVideo ? <HeroVideo desktop={heroReel.desktop} mobile={heroReel.mobile} /> : null}
-                <div className="hero-ripple-slot" data-hero-ripple />
               </div>
             </div>
           </div>

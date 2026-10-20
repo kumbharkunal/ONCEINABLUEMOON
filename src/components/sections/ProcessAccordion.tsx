@@ -46,7 +46,9 @@ export function ProcessAccordion({ steps }: { steps: Step[] }) {
               className="process-panel"
               inert={!isOpen}
             >
-              <p className="process-body text-body">{step.body}</p>
+              <div className="process-panel-inner">
+                <p className="process-body text-body">{step.body}</p>
+              </div>
             </div>
           </li>
         );

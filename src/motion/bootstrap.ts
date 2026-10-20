@@ -18,7 +18,7 @@ const isBelowFold = (el: Element) => el.getBoundingClientRect().top > window.inn
 
 function revealLines(el: HTMLElement) {
   if (!isBelowFold(el)) return;
-  gsap.set(el, { autoAlpha: 0 });
+  gsap.set(el, { opacity: 0 });
   ScrollTrigger.create({
     trigger: el,
     start: 'top 88%',
@@ -31,7 +31,7 @@ function revealLines(el: HTMLElement) {
         linesClass: 'split-line',
         autoSplit: true,
         onSplit(self) {
-          gsap.set(el, { autoAlpha: 1 });
+          gsap.set(el, { opacity: 1 });
           return gsap.from(self.lines, { yPercent: 110, duration: 0.9, ease: EXPO, stagger: 0.08 });
         },
       });
@@ -71,11 +71,11 @@ function revealMedia(frames: HTMLElement[]) {
 
 function reveals(scope: ParentNode) {
   qa('[data-reveal="lines"]', scope).forEach(revealLines);
-  revealBatch(qa('[data-reveal="label"]', scope), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power3.out' });
-  revealBatch(qa('[data-reveal="fade"]', scope), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.06);
-  revealBatch(qa('[data-reveal="rise"]', scope), { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, duration: 0.9, ease: EXPO }, 0.08);
-  revealBatch(qa('[data-reveal="pop"]', scope), { autoAlpha: 0, scale: 0.9 }, { autoAlpha: 1, scale: 1, duration: 0.9, ease: EXPO }, 0.07);
-  revealBatch(qa('[data-reveal="slip"]', scope), { autoAlpha: 0, y: 80 }, { autoAlpha: 1, y: 0, duration: 1.1, ease: EXPO }, 0.12);
+  revealBatch(qa('[data-reveal="label"]', scope), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' });
+  revealBatch(qa('[data-reveal="fade"]', scope), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.06);
+  revealBatch(qa('[data-reveal="rise"]', scope), { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.9, ease: EXPO }, 0.08);
+  revealBatch(qa('[data-reveal="pop"]', scope), { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.9, ease: EXPO }, 0.07);
+  revealBatch(qa('[data-reveal="slip"]', scope), { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 1.1, ease: EXPO }, 0.12);
   revealMedia(qa('[data-reveal="media"], [data-reveal-media]', scope));
 }
 
@@ -150,8 +150,8 @@ function heroTimeline(els: {
     },
   });
   tl.to(state, { p: 1, ease: 'none', duration: 1, onUpdate: render }, 0)
-    .to(copy, { y: () => -window.innerHeight * 0.12, autoAlpha: 0, ease: 'power1.in', duration: 0.6 }, 0)
-    .to([ring, cue].filter(Boolean), { autoAlpha: 0, ease: 'none', duration: 0.3 }, 0);
+    .to(copy, { y: () => -window.innerHeight * 0.1, opacity: 0, ease: 'power1.in', duration: 0.35 }, 0)
+    .to([ring, cue].filter(Boolean), { opacity: 0, ease: 'none', duration: 0.3 }, 0);
   render();
 }
 
@@ -177,7 +177,7 @@ function manifesto(section: HTMLElement) {
     const moon = { p: 0.04 };
     lit.setAttribute('d', moonLitPath(moon.p, 10, 12, 12));
     gsap.to(moon, {
-      p: 0.5,
+      p: 0.38,
       ease: 'none',
       scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom 40%', scrub: 0.8 },
       onUpdate: () => lit.setAttribute('d', moonLitPath(moon.p, 10, 12, 12)),
@@ -322,7 +322,7 @@ function instagram(section: HTMLElement) {
   if (!grid || !isBelowFold(grid)) return;
   const tiles = qa('.ig-tile', grid);
   gsap.set(tiles, {
-    autoAlpha: 0,
+    opacity: 0,
     x: () => gsap.utils.random(-48, 48),
     y: () => gsap.utils.random(-40, 56),
     rotation: () => gsap.utils.random(-7, 7),
@@ -332,7 +332,7 @@ function instagram(section: HTMLElement) {
     trigger: grid,
     start: 'top 85%',
     once: true,
-    onEnter: () => gsap.to(tiles, { autoAlpha: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: 1.2, ease: EXPO, stagger: 0.06 }),
+    onEnter: () => gsap.to(tiles, { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: 1.2, ease: EXPO, stagger: 0.06 }),
   });
 }
 
@@ -413,11 +413,19 @@ export function init(): () => void {
     },
   );
 
+  // Keyboard users may tab ahead of the scroll: anything focused is revealed at once.
+  const onFocus = (e: FocusEvent) => {
+    const el = (e.target as Element | null)?.closest<HTMLElement>('[data-reveal], [data-reveal-media], .ig-tile');
+    if (el && Number(getComputedStyle(el).opacity) < 1) gsap.to(el, { opacity: 1, y: 0, x: 0, scale: 1, rotation: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.3, overwrite: true });
+  };
+  document.addEventListener('focusin', onFocus);
+
   const refresh = () => ScrollTrigger.refresh();
   document.fonts?.ready.then(refresh).catch(() => undefined);
   if (document.readyState !== 'complete') window.addEventListener('load', refresh, { once: true });
 
   return () => {
+    document.removeEventListener('focusin', onFocus);
     window.removeEventListener('load', refresh);
     mm.revert();
   };

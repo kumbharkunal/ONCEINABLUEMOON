@@ -63,7 +63,6 @@ export function FilmDialog() {
               src={youtubeEmbed(film.id)}
               title={film.title}
               allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-              allowFullScreen
               referrerPolicy="strict-origin-when-cross-origin"
               className="absolute inset-0 size-full"
             />

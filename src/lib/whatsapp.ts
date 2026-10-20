@@ -1,4 +1,5 @@
 import { site } from '@/config/site';
+import { formatYmd } from '@/lib/moon';
 
 export const waLink = (text: string) => `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
 
@@ -21,12 +22,6 @@ export type Enquiry = {
   moonLine?: string;
 };
 
-const formatDate = (iso: string) => {
-  const [y, m, d] = iso.split('-').map(Number);
-  if (!y || !m || !d) return iso;
-  const dt = new Date(Date.UTC(y, m - 1, d, 12));
-  return dt.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
-};
 
 /** A neatly formatted WhatsApp enquiry (WhatsApp renders *text* as bold). */
 export function buildEnquiry(e: Enquiry) {
@@ -34,7 +29,7 @@ export function buildEnquiry(e: Enquiry) {
     'Hi Once in a Blue Moon! We’d love to check if you’re free for our wedding.',
     '',
     `*Names:* ${[e.name, e.partner].filter(Boolean).join(' & ')}`,
-    `*Date:* ${formatDate(e.date)}`,
+    `*Date:* ${formatYmd(e.date)}`,
     `*City / venue:* ${e.place || 'Not decided yet'}`,
     `*Events:* ${e.events.length ? e.events.join(', ') : 'To be decided'}`,
     `*Coverage:* ${e.coverage}`,

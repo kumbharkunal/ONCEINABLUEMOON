@@ -6,8 +6,6 @@ declare global {
   }
 }
 
-export const NAV_OFFSET = 88;
-
 export function prefersReducedMotion() {
   return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
@@ -30,7 +28,8 @@ export function scrollToId(id: string) {
   const reduce = prefersReducedMotion();
   const lenis = window.__oiabmLenis;
   if (lenis && !reduce) {
-    lenis.scrollTo(el, { offset: -NAV_OFFSET, duration: 1.2 });
+    // Lenis honours the section's scroll-margin-top (96px), like native scrolling does.
+    lenis.scrollTo(el, { duration: 1.2 });
   } else {
     el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   }

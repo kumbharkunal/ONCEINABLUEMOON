@@ -10,7 +10,6 @@ export const serif = Instrument_Serif({
 
 export const sans = Instrument_Sans({
   subsets: ['latin'],
-  axes: ['wdth'],
   variable: '--font-instrument-sans',
   display: 'swap',
 });

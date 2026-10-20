@@ -62,7 +62,9 @@ export const viewport: Viewport = {
 };
 
 // Runs before first paint: marks JS as available and arms the first-visit intro (never under reduced motion).
-const prePaint = `(function(){var d=document.documentElement;d.classList.add('js');try{var r=window.matchMedia('(prefers-reduced-motion: reduce)').matches;if(!r&&!localStorage.getItem('oiabm-intro')){d.setAttribute('data-intro','play');localStorage.setItem('oiabm-intro','1')}}catch(e){}})();`;
+// After parsing it watches the two Marathi touches and switches their webfont on (html.marathi-ready) once
+// one comes within 1500px, so that font never loads with the first screen.
+const prePaint = `(function(){var d=document.documentElement;d.classList.add('js');try{var r=window.matchMedia('(prefers-reduced-motion: reduce)').matches;if(!r&&!localStorage.getItem('oiabm-intro')){d.setAttribute('data-intro','play');localStorage.setItem('oiabm-intro','1')}}catch(e){}document.addEventListener('DOMContentLoaded',function(){var t=document.querySelectorAll('[lang="mr"]'),go=function(){d.classList.add('marathi-ready')};if(!t.length)return;if(!('IntersectionObserver' in window))return go();var io=new IntersectionObserver(function(es){for(var i=0;i<es.length;i++){if(es[i].isIntersecting){go();io.disconnect();return}}},{rootMargin:'1500px 0px'});for(var i=0;i<t.length;i++)io.observe(t[i])})})();`;
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (

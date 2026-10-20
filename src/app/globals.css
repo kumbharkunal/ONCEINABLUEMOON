@@ -53,7 +53,13 @@
 @theme inline {
   --font-display: var(--font-instrument-serif), "Iowan Old Style", Georgia, serif;
   --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-marathi: var(--font-tiro-marathi), "Noto Serif Devanagari", serif;
+  /* Tiro Devanagari Marathi is switched on (html.marathi-ready) only as its two touches approach the
+     viewport, so its 61 KB never competes with the first screen. Until then: the system's Devanagari. */
+  --font-marathi: var(--marathi-face, "Noto Serif Devanagari"), "Noto Serif Devanagari", "Kohinoor Devanagari", serif;
+}
+
+html.marathi-ready {
+  --marathi-face: var(--font-tiro-marathi);
 }
 
 :root {
@@ -229,11 +235,11 @@
   }
   .btn-quiet {
     padding: 0 1.25rem;
-    background: rgb(var(--paper-rgb) / 0.7);
+    background: var(--color-cream);
     color: var(--color-ink);
   }
   .btn-quiet:hover {
-    background: var(--color-paper);
+    background: var(--color-sand);
   }
 
   /* Text link: a 1px underline that retracts on hover */
@@ -635,10 +641,24 @@ html[data-intro="play"] {
 }
 .hero-zoom,
 .hero-scroll,
-.hero-still,
-.hero-ripple-slot {
+.hero-crop,
+.hero-still {
   position: absolute;
   inset: 0;
+}
+@media (min-width: 64rem) {
+  .hero-crop {
+    transform: scale(var(--crop-s, 1));
+    transform-origin: var(--crop-x, 50%) var(--crop-y, 50%);
+  }
+  .hero-still[data-reel-desktop] {
+    animation: none;
+  }
+}
+@media (max-width: 63.99rem) {
+  .hero-still[data-reel-mobile] {
+    animation: none;
+  }
 }
 .hero-moon-fill {
   background: var(--color-moon-glow);
@@ -653,7 +673,15 @@ html[data-intro="play"] {
   color: inherit;
 }
 .hero-line {
-  animation: rise 0.9s var(--ease-out) calc(var(--intro-delay) + 0.15s + var(--i, 0) * 0.1s) both;
+  animation: rise 0.9s var(--ease-out) calc(0.05s + var(--i, 0) * 0.1s) both;
+}
+/* First visit: the intro is the reveal. The headline is painted in place underneath it, so the loader
+   never delays the LCP (the headline is the LCP element; the full-bleed photo counts as background). */
+html[data-intro="play"] .hero-line,
+html[data-intro="play"] .hero-sub,
+html[data-intro="play"] .hero-ctas,
+html[data-intro="play"] .hero-cue {
+  animation: none;
 }
 .hero-sub {
   animation: fade-up 0.8s var(--ease-out) calc(var(--intro-delay) + 0.55s) both;
@@ -669,7 +697,15 @@ html[data-intro="play"] {
 }
 
 @media (max-width: 63.99rem) {
+  /* The aperture opens to an inset, rounded window (like the menu sheet). Not full-bleed on purpose:
+     browsers treat a viewport-filling image as background, and this photo is the page's real content. */
+  .hero-media,
+  .hero-scrim {
+    inset: 8px;
+    border-radius: 28px;
+  }
   .hero-media {
+    overflow: hidden;
     animation: hero-open 1.2s var(--ease-out) calc(var(--intro-delay) + 0.05s) both;
   }
   .hero-zoom {
@@ -685,9 +721,9 @@ html[data-intro="play"] {
   .hero-copy {
     position: absolute;
     z-index: 3;
-    inset-inline: 0;
-    bottom: 0;
-    padding: 0 var(--margin) max(28px, calc(env(safe-area-inset-bottom) + 20px));
+    inset-inline: 8px;
+    bottom: 8px;
+    padding: 0 calc(var(--margin) + 4px) max(24px, calc(env(safe-area-inset-bottom) + 16px));
     color: var(--color-paper);
   }
   .hero-title {
@@ -719,9 +755,9 @@ html[data-intro="play"] {
 
 @media (min-width: 64rem) {
   .hero-stage {
-    --ap-d: min(108svh, 70vw);
+    --ap-d: min(108svh, 66vw);
     --ap-r: calc(var(--ap-d) / 2);
-    --ap-x: calc(100% - var(--ap-d) * 0.26);
+    --ap-x: calc(100% - var(--ap-d) * 0.22);
     --ap-y: calc(50% + var(--ap-d) * 0.18);
   }
   .hero-media {

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { moonLitPath } from '@/lib/moon-path';
 
 export const metadata: Metadata = {
@@ -21,14 +22,14 @@ export default function NotFound() {
       <p className="mt-5 max-w-[34ch] text-body">
         No moon tonight, and no page here either. The story you’re after is back on the homepage.
       </p>
-      <a href="/" className="btn btn-primary notfound-home mt-8">
+      <Link href="/" className="btn btn-primary notfound-home mt-8">
         Back to the homepage
         <span className="btn-moon">
           <svg viewBox="0 0 16 16" className="size-4" aria-hidden="true">
             <path d="M11.5 8h-8M7 4.5L3.5 8 7 11.5" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </span>
-      </a>
+      </Link>
     </section>
   );
 }

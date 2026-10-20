@@ -46,8 +46,6 @@ export const site = {
   features: {
     /** First-visit intro loader (CSS only). */
     loader: true,
-    /** Desktop-only WebGL "Godavari ripple" on the hero aperture. */
-    heroRipple: true,
   },
 } as const;
 

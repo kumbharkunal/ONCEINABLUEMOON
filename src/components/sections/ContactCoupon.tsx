@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { formatDayMonthYear, formatYmd, moonOn, nextBlueMoon, todayIst, type MoonInfo } from '@/lib/moon';
 import { moonLitPath } from '@/lib/moon-path';
 import { buildEnquiry, waLink } from '@/lib/whatsapp';
@@ -91,11 +91,25 @@ function burstAkshata(from: HTMLElement) {
 
 type Errors = { name?: string; date?: string };
 
+// "Today" is only known in the browser (the page itself is prerendered): read it like an external value,
+// null on the server and during hydration.
+const noSubscribe = () => () => {};
+const readToday = () => todayIst(Date.now());
+const serverToday = () => null;
+
 export function ContactCoupon({ photo }: { photo: React.ReactNode }) {
   const uid = useId();
-  const [today, setToday] = useState<string | null>(null);
-  const [maxDate, setMaxDate] = useState<string | undefined>(undefined);
-  const [nextBlue, setNextBlue] = useState<string | null>(null);
+  const today = useSyncExternalStore(noSubscribe, readToday, serverToday);
+  const maxDate = useMemo(() => {
+    if (!today) return undefined;
+    const [y, m, d] = today.split('-').map(Number);
+    return `${y + 4}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  }, [today]);
+  const nextBlue = useMemo(() => {
+    if (!today) return null;
+    const blue = nextBlueMoon(Date.parse(`${today}T12:00:00+05:30`));
+    return blue ? formatDayMonthYear(blue) : null;
+  }, [today]);
   const [name, setName] = useState('');
   const [partner, setPartner] = useState('');
   const [date, setDate] = useState('');
@@ -107,17 +121,6 @@ export function ContactCoupon({ photo }: { photo: React.ReactNode }) {
   const [sentUrl, setSentUrl] = useState<string | null>(null);
   const summaryRef = useRef<HTMLDivElement>(null);
   const submitRef = useRef<HTMLButtonElement>(null);
-
-  // "Today" is only known in the browser (the page itself is prerendered).
-  useEffect(() => {
-    const now = Date.now();
-    const t = todayIst(now);
-    setToday(t);
-    const [y, m, d] = t.split('-').map(Number);
-    setMaxDate(`${y + 4}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`);
-    const blue = nextBlueMoon(now);
-    if (blue) setNextBlue(formatDayMonthYear(blue));
-  }, []);
 
   const shownDate = date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : today;
   const moon = useMemo(() => (shownDate ? moonOn(shownDate) : null), [shownDate]);
@@ -158,16 +161,14 @@ export function ContactCoupon({ photo }: { photo: React.ReactNode }) {
           <div className="coupon-moon">{moon ? <LiveMoon phase={moon.phase} /> : <LiveMoon phase={0.5} />}</div>
         </div>
         <div className="coupon-caption" aria-live="polite">
-          <p className="text-small text-ink-soft">{isToday ? 'Tonight’s moon' : 'The moon on your wedding night'}</p>
+          <p className="text-small text-ink">{isToday ? 'Tonight’s moon' : 'The moon on your wedding night'}</p>
           <p className="mt-1 font-display text-[1.375rem] leading-snug text-ink">
             {moon && shownDate ? moonSentence(shownDate, moon, isToday) : 'Pick your date to see your wedding-night moon.'}
           </p>
           {moon && !isToday && moonNote(moon) ? <p className="mt-2 text-body text-ink">{moonNote(moon)}</p> : null}
-          {nextBlue ? <p className="mt-3 text-small text-ink-soft">The next blue moon rises on {nextBlue}.</p> : null}
+          {nextBlue ? <p className="mt-3 text-small text-ink">The next blue moon rises on {nextBlue}.</p> : null}
         </div>
       </div>
-
-      <div className="coupon-perf" aria-hidden="true" />
 
       <form className="coupon-form" onSubmit={onSubmit} noValidate aria-describedby={`${uid}-hint`}>
         <p id={`${uid}-hint`} className="sr-only">
@@ -249,7 +250,7 @@ export function ContactCoupon({ photo }: { photo: React.ReactNode }) {
                 {errors.date}
               </p>
             ) : (
-              <p id={`${uid}-date-help`} className="mt-1.5 text-small text-ink-soft">
+              <p id={`${uid}-date-help`} className="mt-1.5 text-small text-ink">
                 The moon on the left changes with it.
               </p>
             )}
@@ -307,7 +308,7 @@ export function ContactCoupon({ photo }: { photo: React.ReactNode }) {
 
         <div className="field mt-6">
           <label htmlFor={`${uid}-msg`} className="field-label">
-            Anything else? <span className="font-normal text-ink-soft">(optional)</span>
+            Anything else? <span className="font-normal">(optional)</span>
           </label>
           <textarea
             id={`${uid}-msg`}
@@ -325,7 +326,7 @@ export function ContactCoupon({ photo }: { photo: React.ReactNode }) {
             <WhatsAppLogo className="size-5" />
           </span>
         </button>
-        <p className="mt-3 text-small text-ink-soft">Opens WhatsApp with your message ready to send. Nothing is stored here.</p>
+        <p className="mt-3 text-small text-ink">Opens WhatsApp with your message ready to send. Nothing is stored here.</p>
         {sentUrl ? (
           <p className="mt-3 text-small text-ink" role="status">
             WhatsApp is opening with your message.{' '}
