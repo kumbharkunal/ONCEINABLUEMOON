@@ -131,7 +131,9 @@ export function Hero() {
             </p>
             <div className="hero-ctas">
               <a href={waLink(heroMessage)} target="_blank" rel="noopener noreferrer" className="btn btn-primary hero-cta-primary">
-                Check your date on WhatsApp
+                <span>
+                  Check your date<span className="hero-cta-tail"> on WhatsApp</span>
+                </span>
                 <span className="btn-moon btn-moon-paper">
                   <WhatsAppLogo className="size-5" />
                 </span>

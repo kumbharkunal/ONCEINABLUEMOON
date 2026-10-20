@@ -673,6 +673,7 @@ html[data-intro="play"] {
   color: inherit;
 }
 .hero-line {
+  white-space: nowrap;
   animation: rise 0.9s var(--ease-out) calc(0.05s + var(--i, 0) * 0.1s) both;
 }
 /* First visit: the intro is the reveal. The headline is painted in place underneath it, so the loader
@@ -726,14 +727,25 @@ html[data-intro="play"] .hero-cue {
     padding: 0 calc(var(--margin) + 4px) max(24px, calc(env(safe-area-inset-bottom) + 16px));
     color: var(--color-paper);
   }
+  /* Sized from the room each line has: the italic "once in a blue moon." is 7.14em wide in Instrument
+     Serif, and the copy box is 100vw − 60px wide. So both lines always fit on one line each (nowrap
+     below), and the block keeps its height when the webfont swaps in (no layout shift). */
   .hero-title {
-    font-size: clamp(2.35rem, 12.2vw, 4.75rem);
+    font-size: clamp(2.1rem, calc((100vw - 60px) / 7.3), 4.75rem);
     line-height: 0.96;
     letter-spacing: -0.015em;
   }
+  /* em, not ch: ch is measured from the font, so a ch-wide box changes width (and wraps differently) when
+     the webfont swaps in, which would shift the bottom-anchored copy. 21em wraps to the same three lines
+     in both fonts on tablets; on phones the box is narrower than that anyway. */
   .hero-sub {
     margin-top: 14px;
-    max-width: 40ch;
+    max-width: 21em;
+  }
+  @media (min-width: 37.5rem) {
+    .hero-sub {
+      min-height: 3lh;
+    }
   }
   .hero-ctas {
     margin-top: 22px;
@@ -747,6 +759,18 @@ html[data-intro="play"] .hero-cue {
   .hero-cta-films {
     justify-self: start;
     color: var(--color-paper);
+  }
+  /* Under ~358px the full label and the WhatsApp disc don't fit in the frame: keep "Check your date" and
+     the logo visible, and leave "on WhatsApp" for screen readers. */
+  @media (max-width: 22.4rem) {
+    .hero-cta-tail {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
   }
   .hero-cue {
     display: none;
