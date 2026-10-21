@@ -54,6 +54,10 @@ Resume file. If a session stops, read this, then the approved plan
   - Turning motion on for phones raised TBT, so the setup was rebuilt: one IntersectionObserver for every once-only reveal, no SplitText or DrawSVG, and the setup in slices (details in DESIGN.md §11).
   - Measured with LoAF attribution (`qa/mobile-loaf.mjs`) and a CPU profile (`qa/mobile-profile.mjs`).
   - Local Lighthouse this afternoon is not comparable with the morning: the laptop is on battery and its benchmark index fell from about 3,800 to about 1,050. Runs use `--throttling.cpuSlowdownMultiplier=1.15` to compensate, which gives TBT 35–62 ms with motion and 53–66 ms with the motion code blocked.
+  - Deployed `6659dd9`.
+  - Live mobile Lighthouse (calibrated): perf 95–96, TBT 55–94 ms, CLS 0, LCP 2.5–2.7 s. The morning's live runs ranged 1.9–3.6 s, and LCP is unaffected by motion.
+  - Live desktop: 99. A11y and BP 100 on both.
+  - `qa/reveal-check.mjs` passes on the live site, phone and desktop, in Chromium and WebKit.
 
 ## Next step
 

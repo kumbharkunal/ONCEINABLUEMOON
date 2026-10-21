@@ -443,7 +443,7 @@ html { overflow-x: clip; } /* keeps position: sticky working */
 - **Trust line:** pills under 64rem, discs above.
 - **Lenis anchor scrolling uses no offset**, because Lenis honours the root's `scroll-padding-top` (and any `scroll-margin-top`).
 - **First-visit intro trimmed to 0.9s** (it held Speed Index back at 1.2s).
-- **Footer wordmark is decorative** (`aria-hidden`); the name is read in the © line.
+- **Footer logo is one image named "Once in a Blue Moon"** (`role="img"`); the nav wordmark and the intro logo are decorative (`aria-hidden`), because the link around the nav wordmark carries the name.
 - **Icons are Phosphor** (per-icon imports from `@phosphor-icons/react/dist/ssr/*`): `light` at 20px (phone, envelope), `bold` at 14–16px (arrows, close) to match the site's ~1.3–1.5px strokes, `fill` for play/pause. Brand logos stay official; moons and the mark stay custom.
 - **The hero reel can be paused** (WCAG 2.2.2): a paper disc at the stage's bottom-right appears once the reel plays; a reel paused by hand stays paused through scrolling.
 - **`html { scroll-padding: 96px 0 88px }`** replaces per-element `scroll-margin`. Anchors land in the same place (Lenis reads it too), and keyboard focus is never hidden under the nav pill or the floating WhatsApp button (WCAG 2.4.11).
