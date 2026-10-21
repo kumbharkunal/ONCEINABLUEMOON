@@ -3,29 +3,49 @@
 Resume file. If a session stops, read this, then the approved plan
 (`C:\Users\kumbh\.claude\plans\pasted-content-id-d3bf-ultrathink-cheeky-firefly.md`), then continue at **Next step**.
 
+**Live:** https://onceinabluemoon-co-in.vercel.app (Vercel project `onceinabluemoon-co-in`, team "Kunal's projects")
+
 ## Phases
 
 - [x] 0. Setup: scaffold (create-next-app 16.4.2), dependencies, git + origin
-- [ ] 1. Image prompts: docs/IMAGE_PROMPTS.md, image-prompts.html (opened), `npm run images`, manifest, placeholders
-- [ ] 2. DESIGN.md + tokens (taste draw, contrast script, fonts, brand components)
-- [ ] 3. Layout, navbar (desktop + mobile), hero, loader, floating WhatsApp
-- [ ] 4. Sections (manifesto → footer), 404, film dialog, contact form + moon widget
-- [ ] 5. Motion polish (GSAP bootstrap, Lenis, reveals, pins, cursor, ripple)
-- [ ] 6. SEO / meta (metadata, OG, JSON-LD, sitemap, robots, icons, README)
-- [ ] 7. QA (build, lint, types, unit, Playwright 8 widths × 2 engines, menu e2e, reduced motion, console, Lighthouse, taste inspect, audits)
-- [ ] 8. Deploy (GitHub push, Vercel project onceinabluemoon-co-in, env, prod, git connect, live checks, final report)
+- [x] 1. Image prompts: docs/IMAGE_PROMPTS.md, image-prompts.html (opened), `npm run images`, manifest, placeholders; all 14 AI images processed
+- [x] 2. DESIGN.md + tokens (taste draw `one-motif`, contrast script, fonts, brand components)
+- [x] 3. Layout, navbar (desktop pill + mobile sheet), hero (still + desktop reel), loader, floating WhatsApp
+- [x] 4. Sections (manifesto → footer), 404, film dialog, contact coupon + live moon
+- [x] 5. Motion (GSAP bootstrap on idle, Lenis on fine pointers, reveals, stories pin, cursor, akshata)
+- [x] 6. SEO / meta (metadata, OG/Twitter image, LocalBusiness + VideoObject + FAQPage JSON-LD, sitemap, robots, noindex switch, icon.svg + apple-icon.png, README)
+- [x] 7. QA
+  - build clean; ESLint and TypeScript clean; 7 unit and 14 e2e tests pass
+  - 8 widths × Chromium + WebKit with no overflow, small targets or console errors
+  - reduced-motion pass; taste lint 0 FAIL and inspect 0 FAIL (brief allowances); contrast script
+- [x] 8. Deploy: GitHub `main`; Vercel project, env (Production + Preview), production deploy, live curl checks. Lighthouse on the live URL: mobile 96–98 in clean runs, desktop 100, A11y/BP 100, CLS 0.
 
 ## Decisions log
 
 - 2026-10-20 · Chrome extension not connected (checked twice). Instagram, Facebook, Google and Justdial reads skipped; gaps recorded in the plan §1. IG follower count is not shown.
 - 2026-10-20 · Scaffold landed in a subfolder (the scratchpad didn't exist) and was moved to the repo root. Package name `onceinabluemoon`.
 - 2026-10-20 · Kept the 16.4 template defaults `cacheComponents: true` + `partialPrefetching: true` (the framework's recommended default, both on by default in the next major). Consequences:
-  - no `new Date()`, `Date.now()` or `Math.random()` during render, in server or client components; "today" is computed after mount
+  - no `new Date()`, `Date.now()` or `Math.random()` during render, in server or client components; "today" is read with `useSyncExternalStore` (null on the server)
   - the homepage exports `ensureStatic = 'navigation'` as a static guard
   - media detection runs in a `prebuild` script, never `fs` in components
 - 2026-10-20 · Tailwind via `@tailwindcss/turbopack` (template), not PostCSS.
 - 2026-10-20 · Pinned: next 16.4.2, react/react-dom 19.3.1, gsap 3.15.0, @gsap/react 2.1.2, motion 14.4.0, lenis 1.3.27, @phosphor-icons/react 2.1.10, clsx 2.1.1; dev sharp 0.35.5, @playwright/test 1.64.1, schema-dts 2.1.0, @types/node 22, typescript 5.9.3 (template `^5`). Lighthouse runs via `npx lighthouse@13.5.0` (not installed).
+- 2026-10-20 · WebGL ripple dropped; phone hero is an inset frame; reveals are opacity-only; blur placeholders not inlined; CSS inlined; reel budgets enforced. Details in DESIGN.md §11 "Build decisions".
+- 2026-10-21 · Vercel project created with the CLI; its framework preset defaulted to "Other" (served only `public/`, so `/` was 404). Fixed by committing `vercel.json` with `"framework": "nextjs"`.
+- 2026-10-21 · `vercel git connect` failed (the Vercel GitHub app can't see the repo). Deploys run with `vercel deploy --prod` until the repo is connected in the dashboard (steps in README "Before launch").
+- 2026-10-21 · Local Lighthouse on this Windows machine is noisy: headless Chrome sometimes holds the first frame for 1–2 s with an idle main thread (scores 84–91 in those runs). Clean runs use Playwright's chrome-headless-shell (`CHROME_PATH`, see `scripts/lighthouse.mjs`). The PageSpeed Insights API quota was exhausted, so PSI is left for Kunal to run.
+- 2026-10-21 · Perf fixes:
+  - hero photo preloaded from `<head>`; phones get q60 ≤ 1080w
+  - Marathi font switched on near its touches
+  - hero headline sized from its room (no font-swap shift)
+  - intro 0.9 s
+  - favicon replaced (15 KB ico → 0.3 KB svg)
 
 ## Next step
 
-Phase 1: write docs/IMAGE_PROMPTS.md and image-prompts.html from plan §8 and open the HTML for Kunal, then build scripts/process-images.mjs.
+Done for the pitch. Remaining items are Kunal's:
+1. Connect the GitHub repo in the Vercel dashboard.
+2. Run PageSpeed Insights once.
+3. Decide on the two archival images (LACMA Paithani, Godavari ghat).
+
+Remaining for the client: the go-live checklist in README.

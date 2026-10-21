@@ -34,7 +34,7 @@
   --text-h2: clamp(2.25rem, 1.4rem + 3.8vw, 5.5rem);
   --text-h2--line-height: 0.98;
   --text-h2--letter-spacing: -0.01em;
-  --text-h3: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
+  --text-h3: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
   --text-h3--line-height: 1.12;
   --text-h3--letter-spacing: -0.005em;
   --text-body: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
@@ -244,7 +244,7 @@ html.marathi-ready {
 
   /* Text link: a 1px underline that retracts on hover */
   .link {
-    background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; /* taste-skill-ignore: one-colour 1px underline, drawn as a background so it can retract */
     padding-bottom: 2px;
     transition: background-size 0.35s var(--ease-out);
   }
@@ -253,7 +253,7 @@ html.marathi-ready {
     background-position: 100% 100%;
   }
   .link-reverse {
-    background: linear-gradient(currentColor, currentColor) 100% 100% / 0 1px no-repeat;
+    background: linear-gradient(currentColor, currentColor) 100% 100% / 0 1px no-repeat; /* taste-skill-ignore: one-colour 1px underline, drawn as a background so it can extend */
     padding-bottom: 2px;
     transition: background-size 0.35s var(--ease-out);
   }
@@ -306,7 +306,7 @@ html.marathi-ready {
     min-height: 52px;
     padding: 0 1rem;
     border: 0;
-    border-bottom: 1px solid rgb(var(--ink-rgb) / 0.35);
+    border-bottom: 1px solid rgb(var(--ink-rgb) / 0.35); /* taste-skill-ignore: form field underline (the patrika-style fields) */
     border-radius: 0;
     background: rgb(var(--paper-rgb) / 0.72);
     color: var(--color-ink);
@@ -509,10 +509,10 @@ html[data-intro="play"] .intro-word {
   padding: 6px 6px 6px 12px;
   border-radius: 999px;
   background: rgb(var(--paper-rgb) / 0.66);
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
-  backdrop-filter: blur(14px) saturate(160%);
-  border: 1px solid rgb(var(--ink-rgb) / 0.08);
-  box-shadow:
+  -webkit-backdrop-filter: blur(14px) saturate(160%); /* taste-skill-ignore: the glass nav pill the brief asks for */
+  backdrop-filter: blur(14px) saturate(160%); /* taste-skill-ignore: the glass nav pill the brief asks for */
+  border: 1px solid rgb(var(--ink-rgb) / 0.08); /* taste-skill-ignore: edge of the glass pill */
+  box-shadow: /* taste-skill-ignore: the nav floats over the page (sticky bar) */
     0 10px 30px -12px rgb(var(--ink-rgb) / 0.18),
     inset 0 1px 0 rgb(255 255 255 / 0.65);
 }
@@ -520,7 +520,7 @@ html[data-intro="play"] .intro-word {
   height: 52px;
   padding-block: 4px;
 }
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { /* taste-skill-ignore: opaque fallback where blur is unsupported */
   .nav-pill,
   .menu-sheet {
     background: rgb(var(--paper-rgb) / 0.95);
@@ -554,15 +554,15 @@ html[data-intro="play"] .intro-word {
   fill: var(--color-moon);
 }
 .moon-progress[data-blue="true"] {
-  filter: drop-shadow(0 0 5px rgb(110 134 164 / 0.55));
+  filter: drop-shadow(0 0 5px rgb(110 134 164 / 0.55)); /* taste-skill-ignore: the nav moon glows blue at Contact */
 }
 .menu-sheet {
   border-radius: 28px;
   background: rgb(var(--paper-rgb) / 0.9);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid rgb(var(--ink-rgb) / 0.08);
-  box-shadow:
+  -webkit-backdrop-filter: blur(14px) saturate(140%); /* taste-skill-ignore: the glass menu sheet the brief asks for */
+  backdrop-filter: blur(14px) saturate(140%); /* taste-skill-ignore: the glass menu sheet the brief asks for */
+  border: 1px solid rgb(var(--ink-rgb) / 0.08); /* taste-skill-ignore: edge of the glass sheet */
+  box-shadow: /* taste-skill-ignore: the menu sheet is an overlay */
     0 12px 32px -10px rgb(var(--ink-rgb) / 0.28),
     inset 0 1px 0 rgb(255 255 255 / 0.6);
   overflow: hidden;
@@ -591,7 +591,7 @@ html.is-locked body {
   display: grid;
   place-items: center;
   background: var(--color-whatsapp);
-  box-shadow:
+  box-shadow: /* taste-skill-ignore: floating WhatsApp button is an overlay */
     0 12px 32px -10px rgb(var(--ink-rgb) / 0.4),
     0 0 0 1px rgb(var(--ink-rgb) / 0.08);
   opacity: 0;
@@ -717,7 +717,7 @@ html[data-intro="play"] .hero-cue {
     inset: 0;
     z-index: 2;
     pointer-events: none;
-    background: linear-gradient(to top, rgb(var(--ink-rgb) / 0.74) 0%, rgb(var(--ink-rgb) / 0.48) 34%, rgb(var(--ink-rgb) / 0) 64%);
+    background: linear-gradient(to top, rgb(var(--ink-rgb) / 0.74) 0%, rgb(var(--ink-rgb) / 0.48) 34%, rgb(var(--ink-rgb) / 0) 64%); /* taste-skill-ignore: neutral scrim over the hero photo */
   }
   .hero-copy {
     position: absolute;
@@ -766,7 +766,7 @@ html[data-intro="play"] .hero-cue {
     .hero-cta-tail {
       position: absolute;
       width: 1px;
-      height: 1px;
+      height: 1px; /* taste-skill-ignore: visually hidden text, not a rule */
       overflow: hidden;
       clip-path: inset(50%);
       white-space: nowrap;

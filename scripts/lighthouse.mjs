@@ -1,5 +1,9 @@
 // node scripts/lighthouse.mjs [url]  → runs Lighthouse 13.5 (mobile + desktop) and prints scores + key metrics.
 // Uses the locally installed Chrome. Reports land in qa/lighthouse-*.json.
+// Env: FORMS=mobile,desktop · CHROME_PATH=<browser exe> · LH_CHROME_FLAGS="<flags>" · LH_EXTRA="--flag|--flag" · LH_TAG=<suffix>
+// On Windows, installed Chrome's new-headless mode sometimes holds the first frame for 1-2 s, which skews the
+// simulated metrics. For stable runs point CHROME_PATH at Playwright's chrome-headless-shell and set
+// LH_CHROME_FLAGS="--no-first-run --no-default-browser-check".
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 

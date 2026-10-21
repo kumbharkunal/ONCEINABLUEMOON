@@ -11,7 +11,8 @@ type Props = {
 };
 
 /** A moon drawn with its true terminator (half-ellipse), for labels, steps and markers. Decorative. */
-export function MoonPhase({ phase, className, lit = 'currentColor', shadow = 'transparent', ring }: Props) {
+// taste-skill-ignore (next line): `shadow` is the colour of the moon's dark side, not a box shadow.
+export function MoonPhase({ phase, className, lit = 'currentColor', shadow = 'transparent', ring }: Props) { // taste-skill-ignore
   const r = 10;
   return (
     <svg viewBox="0 0 24 24" className={cn('shrink-0', className)} aria-hidden="true" focusable="false">

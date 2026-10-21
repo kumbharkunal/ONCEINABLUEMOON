@@ -52,7 +52,8 @@
   margin-top: 28px;
   max-width: 30ch;
   font-family: var(--font-display);
-  font-size: var(--text-h3);
+  /* A statement, set as a paragraph: never above 36px, however wide the screen. */
+  font-size: min(var(--text-h3), 2.25rem);
   line-height: 1.16;
   letter-spacing: -0.005em;
   color: var(--color-ink);
@@ -334,7 +335,7 @@
   height: 18px;
   border-radius: 50%;
   background: var(--color-moon-glow);
-  box-shadow: inset calc((0.5 - var(--lit)) * 36px) 0 0 0 var(--color-sand);
+  box-shadow: inset calc((0.5 - var(--lit)) * 36px) 0 0 0 var(--color-sand); /* taste-skill-ignore: draws the lit part of the moon (its terminator), not a shadow */
 }
 
 /* ───────────── Films (the one dark band) ───────────── */
@@ -544,10 +545,10 @@
 
 /* ───────────── Services (index with preview) ───────────── */
 .svc-list {
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid var(--hairline); /* taste-skill-ignore: Services index rows */
 }
 .svc-item {
-  border-bottom: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline); /* taste-skill-ignore: Services index rows */
 }
 .svc summary::-webkit-details-marker {
   display: none;
@@ -804,7 +805,7 @@
 .faq-divider::after {
   content: "";
   flex: 1;
-  height: 1px;
+  height: 1px; /* taste-skill-ignore: the crescent divider sits on this line (brief: dividers) */
   background: var(--hairline);
 }
 .faq-stack {
@@ -999,11 +1000,11 @@
   padding: 44px 28px 40px;
   background: var(--color-paper);
   -webkit-mask:
-    radial-gradient(circle at 50% 0, #0000 var(--scallop), #000 calc(var(--scallop) + 0.5px)) top / calc(var(--scallop) * 2.6) 51% repeat-x,
-    radial-gradient(circle at 50% 100%, #0000 var(--scallop), #000 calc(var(--scallop) + 0.5px)) bottom / calc(var(--scallop) * 2.6) 51% repeat-x;
+    radial-gradient(circle at 50% 0, #0000 var(--scallop), #000 calc(var(--scallop) + 0.5px)) top / calc(var(--scallop) * 2.6) 51% repeat-x, /* taste-skill-ignore: scalloped edge of the paper slip (a mask, not a fill) */
+    radial-gradient(circle at 50% 100%, #0000 var(--scallop), #000 calc(var(--scallop) + 0.5px)) bottom / calc(var(--scallop) * 2.6) 51% repeat-x; /* taste-skill-ignore: scalloped edge of the paper slip (a mask, not a fill) */
   mask:
-    radial-gradient(circle at 50% 0, #0000 var(--scallop), #000 calc(var(--scallop) + 0.5px)) top / calc(var(--scallop) * 2.6) 51% repeat-x,
-    radial-gradient(circle at 50% 100%, #0000 var(--scallop), #000 calc(var(--scallop) + 0.5px)) bottom / calc(var(--scallop) * 2.6) 51% repeat-x;
+    radial-gradient(circle at 50% 0, #0000 var(--scallop), #000 calc(var(--scallop) + 0.5px)) top / calc(var(--scallop) * 2.6) 51% repeat-x, /* taste-skill-ignore: scalloped edge of the paper slip (a mask, not a fill) */
+    radial-gradient(circle at 50% 100%, #0000 var(--scallop), #000 calc(var(--scallop) + 0.5px)) bottom / calc(var(--scallop) * 2.6) 51% repeat-x; /* taste-skill-ignore: scalloped edge of the paper slip (a mask, not a fill) */
 }
 .kind-slip-1 {
   rotate: -3deg;
@@ -1301,7 +1302,7 @@ fieldset {
 .footer-base {
   margin-top: clamp(40px, 5vw, 72px);
   padding-top: 20px;
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid var(--hairline); /* taste-skill-ignore: footer base rule */
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -1369,7 +1370,7 @@ html.is-locked .moon-cursor {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid rgb(var(--ink-rgb) / 0.35);
+  border: 1px solid rgb(var(--ink-rgb) / 0.35); /* taste-skill-ignore: the moon cursor ring */
   transition:
     scale 0.4s var(--ease-out),
     background-color 0.3s var(--ease-out),
@@ -1422,7 +1423,7 @@ html.is-locked .moon-cursor {
   height: 9px;
   border-radius: 50%;
   background: var(--color-paper);
-  box-shadow: 0 0 0 1px rgb(var(--ink-rgb) / 0.14);
+  box-shadow: 0 0 0 1px rgb(var(--ink-rgb) / 0.14); /* taste-skill-ignore: keeps the paper-white rice grains visible on paper */
 }
 
 /* ───────────── 404 ───────────── */

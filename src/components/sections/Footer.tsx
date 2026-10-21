@@ -10,7 +10,7 @@ const phases = [0.03, 0.1, 0.17, 0.25, 0.32, 0.39, 0.45, 0.5];
 /** The close: a row of phases, the name built large with its "O" as the full blue moon, and every way in. */
 export function Footer() {
   return (
-    <footer id="footer" className="footer" aria-labelledby="footer-title">
+    <footer id="footer" className="footer">
       <div className="page">
         <ul className="footer-phases" aria-hidden="true">
           {phases.map((p) => (
@@ -20,9 +20,10 @@ export function Footer() {
           ))}
         </ul>
 
-        <p id="footer-title" className="footer-mark font-display" data-footer-mark>
-          <span className="sr-only">{site.name}</span>
-          <span className="footer-mark-line" aria-hidden="true">
+        {/* The wordmark is a picture of the name (its "O" is the moon); the name itself is read out in the
+            © line below, so the mark stays out of the accessibility tree. */}
+        <p className="footer-mark font-display" data-footer-mark aria-hidden="true">
+          <span className="footer-mark-line">
             <span className="footer-o" data-footer-o>
               <svg viewBox="0 0 24 24" className="size-full" focusable="false">
                 <circle cx="12" cy="12" r="10.2" className="footer-o-shadow" />
@@ -31,9 +32,7 @@ export function Footer() {
             </span>
             <span>nce in a</span>
           </span>
-          <span className="footer-mark-line" aria-hidden="true">
-            Blue Moon
-          </span>
+          <span className="footer-mark-line">Blue Moon</span>
         </p>
 
         <div className="footer-grid">
@@ -50,7 +49,7 @@ export function Footer() {
             <ul className="space-y-1 text-body">
               <li>
                 <a href={waLink(chatMessage)} target="_blank" rel="noopener noreferrer" className="link-reverse inline-flex min-h-11 items-center gap-2">
-                  <WhatsAppLogo className="size-[18px]" />
+                  <WhatsAppLogo className="size-4.5" />
                   WhatsApp {site.phoneDisplay}
                 </a>
               </li>

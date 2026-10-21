@@ -293,14 +293,14 @@ document.fonts.ready.then(() => ScrollTrigger.refresh());
 @keyframes fade-up { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform:none; } }
 .line-mask { display:block; overflow:clip; } .line-mask > span { display:block; animation: rise .9s var(--ease-out) both; }
 ```
-Hero order: the aperture scales 0.9→1 and the ring draws (0–0.9s), then H1 lines (0.15s, +0.1s each), sub (0.55s), CTAs (0.7s), scroll cue (0.9s). Everything ends by 1.6s. On a first visit the loader (1.2s) runs first, and the hero animations are delayed with `html[data-intro=play]`.
+Hero order: the aperture scales 0.9→1 and the ring draws (0–0.9s), then H1 lines (0.15s, +0.1s each), sub (0.55s), CTAs (0.7s), scroll cue (0.9s). Everything ends by 1.6s. On a first visit the loader (0.9s) runs first, and the hero animations are delayed with `html[data-intro=play]`.
 
 ### Scroll behaviour (one choreography for every section; triggered once at `top 85%`)
 - Section label: fade + y 12px (0.6s).
 - H2: SplitText lines with `mask:'lines'`, `yPercent:110→0`, 0.9s expo.out, 0.08s stagger.
 - Body: fade + y 16px, 0.7s, 0.06s stagger.
 - Media: `clip-path: inset(0 0 100% 0) → inset(0)` 1.2s expo.out, with the inner image scaling 1.15→1; then a gentle scrubbed parallax (yPercent ±6).
-- Only elements still below the fold when the bootstrap runs are hidden and animated, so nothing can stay invisible.
+- Only elements still below the fold when the bootstrap runs are hidden and animated, so nothing can stay invisible. They are hidden with `opacity` alone (never `visibility`), so they stay in the tab order and the accessibility tree, and anything that receives focus is revealed at once.
 - Specials:
   - **Hero:** CSS sticky track (210svh); scrub drives the aperture circle to full-bleed, the media scales 1.15→1, and the headline drifts −12vh and fades.
   - **Manifesto:** words scrub opacity .16→1 while a faint background moon waxes.
@@ -318,7 +318,7 @@ Every interactive element has hover, active, focus-visible and disabled states (
 ### Special effects
 - **Signature, "Index with preview" (Services):** hovering a row brings its image into one fixed moon frame (240ms crossfade + `circle()` reveal) and dims the other rows to ink-soft (never below 4.5:1). On touch, each row expands inline.
 - **Moon cursor:** fine pointers only; a dot plus a lerped ring that becomes "Play" over films and "View" over Instagram tiles; the native cursor in fields.
-- **Godavari ripple:** optional raw WebGL on the desktop hero aperture; renders only while the pointer moves; paused offscreen.
+- **Godavari ripple:** dropped (see §11). The hero reel is the moving picture.
 - **Akshata:** 14 rice grains burst from "Send on WhatsApp".
 - **Nav moon:** waxes with scroll and turns blue at Contact.
 
@@ -345,7 +345,7 @@ With reduced motion there is no Lenis, loader, scrub, pin, parallax, marquee mot
 ### Don't
 - ❌ Never caption an AI image with a real couple's name, and never AI-generate Dhiraj or any real person.
 - ❌ No invented awards, press, wedding counts, ratings, prices or reviews presented as real.
-- ❌ No gradients, glows or drop shadows at rest (exceptions: the nav pill, the floating WhatsApp button, the dialog, and brand logos).
+- ❌ No gradients, glows or drop shadows at rest (exceptions: the nav pill and its moon's blue glow at Contact, the menu sheet, the floating WhatsApp button, the dialog, the neutral scrim over the phone hero photo, and brand logos).
 - ❌ No card grids, icon-topped feature cards, pill badges or eyebrow chips (except the Marathi line and the moon-phase section labels).
 - ❌ No monospace, no tiny tracked uppercase labels, no single italic accent word in a headline.
 - ❌ No `filter: blur()` on moving elements; `backdrop-filter` ≤ 14px and only on the nav.
@@ -358,7 +358,7 @@ With reduced motion there is no Lenis, loader, scrub, pin, parallax, marquee mot
 
 | Name | Width | Key changes |
 |---|---|---|
-| Phone S | 320–374 | 16px margins; hero H1 two lines at 12.4vw; nav pill with mark + name + Menu |
+| Phone S | 320–374 | 16px margins; hero H1 two lines sized from its room, `(100vw − 60px) / 7.3`; nav pill with mark + name + Menu; under 358px the hero CTA reads "Check your date" + the WhatsApp disc |
 | Phone | 375–767 | Portrait hero (auto-open aperture, text on scrim, CTAs in thumb zone); snap carousels for Stories and Films |
 | Tablet | 768–1023 | Mobile nav; 4-column grid; Stories snap; Services accordion |
 | Desktop | 1024–1439 | Glass pill nav; 12 columns; sticky hero scrub; pinned Stories; Services index preview; cursor |
@@ -376,7 +376,7 @@ html { overflow-x: clip; } /* keeps position: sticky working */
 
 ## 10. Imagery
 
-- **Grade:** a warm Portra 400 look: creamy highlights, warm open shadows, true Indian skin tones, olive greens, a faint moonlight-blue in the deepest shadows, fine grain. The paper grain overlay (SVG `feTurbulence`, 5%, fixed, no blend mode) sits over everything.
+- **Grade:** a warm Portra 400 look: creamy highlights, warm open shadows, true Indian skin tones, olive greens, a faint moonlight-blue in the deepest shadows, fine grain. The paper grain overlay (SVG `feTurbulence`, 7%, fixed, no blend mode) sits over everything.
 - **Aspect families:** 16:9 (films, hero desktop), 9:16 (hero mobile), 4:5 (portrait chapters, services), 3:2 (landscape chapters), 1:1 (Instagram).
 - **Masks:** the hero is a circle; Stories frames are arches (`border-radius: 999px 999px 0 0`), the moon rising; the Services preview and the About portrait are circles; Instagram tiles are circles; films stay 16:9 rectangles (screens).
 - **Sources:** 14 AI images (placeholders until real work arrives; see `docs/IMAGE_PROMPTS.md`), plus the studio's own YouTube thumbnails for films. A missing image renders a tonal sand placeholder (grain + crescent + "Image coming soon").
@@ -389,7 +389,7 @@ html { overflow-x: clip; } /* keeps position: sticky working */
 | Slot | Sheet | Used | Why |
 |---|---|---|---|
 | Hero | Tabbed folder stack | Direction §2: giant cropped circle from the lower right, headline left | The brief specifies the aperture hero; the sheet's own direction text describes exactly this |
-| intro | Statement with inline thumbnails | ✓ manifesto, inline frames are circles | Brief: large serif paragraph lit word by word, so ~40px (above taste's 36px) |
+| intro | Statement with inline thumbnails | ✓ manifesto, inline frames are circles | Brief: large serif paragraph lit word by word; capped at 36px, so it reads as a paragraph |
 | proof | Large marks on tiles | ✓ as a line of five flat cream discs + a heading tile | Brief: trust line |
 | gallery | One frame, contents change | Pinned horizontal arches | Brief specifies a pinned horizontal scroll |
 | work | Staggered tiles, empty cells | ✓ Films on the night band | — |
@@ -412,3 +412,18 @@ html { overflow-x: clip; } /* keeps position: sticky working */
 - **High-end:** double-bezel cards and blur reveals rejected; button-in-button kept for the primary CTA (the trailing circle is a moon).
 - **Hero headline:** pre-split on the server into CSS masks, not SplitText, so the first screen never waits for JS.
 - **Open-collection images:** a public-domain LACMA Paithani bridal sari and a CC BY-SA photo of Nashik's Godavari ghat were found; not downloaded yet (needs Kunal's OK). Offered in the report.
+
+**Build decisions (2026-10-20/21):**
+- **No WebGL ripple.** The real hero reel already moves; the ripple would add JS and GPU cost for little gain.
+- **Phone hero is an inset rounded frame** (8px inset, 28px radius, like the menu sheet), not full-bleed. Browsers treat a viewport-filling image as background, and this photograph is the page's real content (its LCP).
+- **Hero headline sized from its room.** The italic line is 7.14em wide in Instrument Serif, so phones use `(100vw − 60px) / 7.3` with `nowrap`. The copy keeps its height when the webfont swaps in (CLS 0). The tablet subline uses `em`, not `ch`, for the same reason.
+- **The hero photograph is preloaded from `<head>`**, ahead of the scripts, one preload per art-directed source (media queries). Phones get q60, capped at 1080w, with a 750w candidate for 412px screens.
+- **The Marathi webfont is switched on near its two touches** (`html.marathi-ready`, set by an IntersectionObserver in the head script), so its 61 KB never loads with the first screen. Spaces stay outside the Marathi spans, or the font's Latin file would load too.
+- **CSS is inlined** (`experimental.inlineCss`). Next also copies it into the RSC payload; Vercel's brotli dedupes that (about 1.4 KB). Blur placeholders are not inlined: the dominant colour is enough.
+- **Hero reel budgets** (desktop ≤ 4 MB, phone ≤ 2.5 MB) are enforced at build time. Phones never fall back to the desktop reel. The supplied reel's generator mark is cropped out with `REEL_CROP`.
+- **Coupon text in full ink** on moon-glow (ink-soft measured 4.44:1 there).
+- **Trust line:** pills under 64rem, discs above.
+- **Lenis anchor scrolling uses no offset**, because Lenis honours `scroll-margin-top`.
+- **First-visit intro trimmed to 0.9s** (it held Speed Index back at 1.2s).
+- **Footer wordmark is decorative** (`aria-hidden`); the name is read in the © line.
+- **Taste inspector.** It runs with allowances for what the brief asks for: numbered lunar labels and label/value pairs, structural hairlines, the glass pill, the cream palette, the italic hero line, animated one-colour link underlines, the moon-phase process steps, the snap rows and the pinned stories. The manifesto and H3 are capped at 36px. Every kept pattern carries a `taste-skill-ignore` reason in the CSS.
