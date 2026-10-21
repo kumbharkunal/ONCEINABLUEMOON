@@ -24,6 +24,10 @@
   --color-step-2: #46566f;
   --color-step-3: #9fb0c5;
   --color-step-4: #d7e0ea;
+  /* The sky from sunset to the blue moon (scrollbar). Each holds ≥ 3:1 on paper. */
+  --color-sky-sunset: #c8644a;
+  --color-sky-rose: #b65a86;
+  --color-sky-lilac: #7f72b3;
   --color-error: #8a2419;
   --color-success: #2f6b47;
   --color-whatsapp: #25d366;
@@ -92,6 +96,8 @@ html.marathi-ready {
        floating WhatsApp button, so keyboard focus is never hidden under either. */
     scroll-padding-top: 96px;
     scroll-padding-bottom: 88px;
+    /* Keeps the page from jumping sideways when the film dialog or menu locks scrolling. */
+    scrollbar-gutter: stable;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
   }
@@ -571,6 +577,7 @@ html[data-intro="play"] .intro-word {
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
+  scrollbar-color: var(--color-moon) transparent;
   will-change: clip-path;
 }
 @media (max-height: 30rem) {
@@ -590,6 +597,33 @@ html.is-locked body {
 }
 .btn-moon-paper {
   background: var(--color-paper) !important;
+}
+
+/* ───────────── Scrollbar: the sky from sunset to the blue moon ───────────── */
+/* The thumb is a pill of evening sky (sunset coral, rose, lilac, then the moon's blues), the same journey
+   the page takes from the dusk hero to the blue moon at Contact. It sits in a paper rim on a paper track.
+   Chromium and WebKit; Firefox draws a solid moon-blue thumb; phones keep their overlay scrollbars.
+   (A thumb that changes colour as you scroll was tried: Chromium clips the paper mask around it and
+   never repaints the thumb on class changes, so the sky lives inside the thumb instead.) */
+html::-webkit-scrollbar {
+  width: 14px;
+}
+html::-webkit-scrollbar-track {
+  background: var(--color-paper);
+}
+html::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--color-sky-sunset), var(--color-sky-rose) 30%, var(--color-sky-lilac) 55%, var(--color-moon) 78%, var(--color-deep-moon)) padding-box; /* taste-skill-ignore: the scrollbar sky the client asked for */
+  border: 3px solid var(--color-paper);
+  border-radius: 999px;
+}
+html::-webkit-scrollbar-thumb:hover,
+html::-webkit-scrollbar-thumb:active {
+  border-width: 2px;
+}
+@supports not selector(::-webkit-scrollbar) {
+  html {
+    scrollbar-color: var(--color-moon) var(--color-paper);
+  }
 }
 
 /* ───────────── Floating WhatsApp ───────────── */

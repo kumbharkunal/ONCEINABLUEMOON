@@ -21,6 +21,9 @@ const T = {
   step3: '#9FB0C5',
   step4: '#D7E0EA',
   whatsapp: '#25D366',
+  skySunset: '#C8644A',
+  skyRose: '#B65A86',
+  skyLilac: '#7F72B3',
 };
 
 const lum = (hex) => {
@@ -44,6 +47,8 @@ const pairs = [
   ['paper', 'step1', 'text'], ['paper', 'step2', 'text'], ['ink', 'step3', 'text'], ['ink', 'step4', 'text'],
   ['deepMoon', 'paper', 'graphic'], ['moonGlow', 'night', 'graphic'],
   ['champagne', 'paper', 'decorative'], ['moon', 'night', 'graphic'],
+  // scrollbar thumb colours on the paper gutter
+  ['skySunset', 'paper', 'graphic'], ['skyRose', 'paper', 'graphic'], ['skyLilac', 'paper', 'graphic'], ['moon', 'paper', 'graphic'],
 ];
 
 let failed = 0;

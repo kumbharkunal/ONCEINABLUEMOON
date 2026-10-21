@@ -433,5 +433,10 @@ html { overflow-x: clip; } /* keeps position: sticky working */
   - the hero track is never shorter than its 540px stage
   - the phone headline is capped at `14svh`
   - the menu sheet scrolls, so every link stays reachable
+- **Scrollbar (client request): a pill of evening sky.**
+  - The gradient runs sunset coral → rose → lilac → moon → deep moon (`--color-sky-*` tokens, each ≥ 3:1 on paper), in a paper rim on a paper track.
+  - It renders in Chromium and WebKit; Firefox shows a solid moon-blue thumb, and phones keep their overlay scrollbars.
+  - `scrollbar-gutter: stable` stops the page jumping sideways when the dialog or menu locks scrolling.
+  - A thumb that changed colour with scroll position was dropped: Chromium clipped the mask around it and won't repaint the thumb on class changes.
 - **Audits (2026-10-21).** The web-design checklist passes, with two noted deviations: the display serif is 400 (Instrument Serif's only weight), and there is no WebGL moment (three of the four scroll-story patterns are covered without it). The ui-ux-pro-max pre-delivery items that apply to the web pass; light-only by brief, so the dark-mode rows don't apply.
 - **Taste inspector.** It runs with allowances for what the brief asks for: numbered lunar labels and label/value pairs, structural hairlines, the glass pill, the cream palette, the italic hero line, animated one-colour link underlines, the moon-phase process steps, the snap rows and the pinned stories. The manifesto and H3 are capped at 36px. Every kept pattern carries a `taste-skill-ignore` reason in the CSS.
