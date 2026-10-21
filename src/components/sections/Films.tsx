@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { PlayIcon } from '@phosphor-icons/react/dist/ssr/Play';
 import { featuredFilm, otherFilms, youtubeThumb, youtubeWatch, type Film } from '@/content/films';
 import { site } from '@/config/site';
 import { YouTubeLogo } from '@/components/brand/logos';
@@ -11,9 +12,7 @@ import { cn } from '@/lib/cn';
 function PlayMoon({ className }: { className?: string }) {
   return (
     <span className={cn('film-play', className)} aria-hidden="true">
-      <svg viewBox="0 0 16 16" className="size-[38%]">
-        <path d="M5.5 3.8v8.4l6.8-4.2z" fill="currentColor" />
-      </svg>
+      <PlayIcon weight="fill" className="size-[38%]" />
     </span>
   );
 }

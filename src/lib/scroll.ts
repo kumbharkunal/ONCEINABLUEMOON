@@ -28,7 +28,7 @@ export function scrollToId(id: string) {
   const reduce = prefersReducedMotion();
   const lenis = window.__oiabmLenis;
   if (lenis && !reduce) {
-    // Lenis honours the section's scroll-margin-top (96px), like native scrolling does.
+    // Lenis honours html's scroll-padding-top (96px, clear of the nav pill), like native scrolling does.
     lenis.scrollTo(el, { duration: 1.2 });
   } else {
     el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });

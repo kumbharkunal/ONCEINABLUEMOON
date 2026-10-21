@@ -1,32 +1,11 @@
+import { EnvelopeSimpleIcon } from '@phosphor-icons/react/dist/ssr/EnvelopeSimple';
+import { PhoneIcon } from '@phosphor-icons/react/dist/ssr/Phone';
 import { site } from '@/config/site';
 import { imageManifest } from '@/generated/images';
 import { SmartImage } from '@/components/ui/SmartImage';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { InstagramLogo } from '@/components/brand/logos';
 import { ContactCoupon } from '@/components/sections/ContactCoupon';
-
-function PhoneGlyph({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" focusable="false">
-      <path
-        d="M6.6 3.5h2.6l1.4 4-2 1.4a12 12 0 0 0 6.5 6.5l1.4-2 4 1.4v2.6a1.7 1.7 0 0 1-1.8 1.7C11.4 18.8 5.2 12.6 4.9 5.3a1.7 1.7 0 0 1 1.7-1.8Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function MailGlyph({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" focusable="false">
-      <rect x="3.5" y="5.5" width="17" height="13" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.3" />
-      <path d="M4 6.5l8 6 8-6" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
-    </svg>
-  );
-}
 
 const emailHref = `mailto:${site.email}?subject=${encodeURIComponent('Is our wedding date free?')}&body=${encodeURIComponent(
   'Hi Once in a Blue Moon,\n\nOur names:\nWedding date:\nCity / venue:\nEvents:\nPhotos, film or both:\n\nThank you!',
@@ -69,7 +48,7 @@ export function Contact() {
         <ul className="contact-alt mt-10 flex flex-wrap gap-3" aria-label="Other ways to reach us">
           <li>
             <a href={`tel:${site.phone}`} className="btn btn-quiet gap-2.5">
-              <PhoneGlyph className="size-5" />
+              <PhoneIcon weight="light" className="size-5" aria-hidden="true" />
               Call {site.phoneDisplay}
             </a>
           </li>
@@ -81,7 +60,7 @@ export function Contact() {
           </li>
           <li>
             <a href={emailHref} className="btn btn-quiet gap-2.5">
-              <MailGlyph className="size-5" />
+              <EnvelopeSimpleIcon weight="light" className="size-5" aria-hidden="true" />
               Email us
             </a>
           </li>

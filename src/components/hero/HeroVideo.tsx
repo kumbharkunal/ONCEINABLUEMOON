@@ -4,14 +4,21 @@ import { useEffect, useRef, useState } from 'react';
 
 type Conn = { saveData?: boolean; effectiveType?: string };
 
+/** Window events shared with HeroReelToggle (the pause control lives outside the clipped aperture). */
+export const REEL_STATE = 'oiabm:reel';
+export const REEL_TOGGLE = 'oiabm:reel-toggle';
+export type ReelState = 'playing' | 'paused';
+
 /**
  * Optional hero reel. Starts only after load + idle, never on Save-Data, slow connections or reduced
- * motion. The still poster underneath stays the LCP element.
+ * motion. The still poster underneath stays the LCP element. A visitor can pause it (WCAG 2.2.2); once
+ * paused by hand it stays paused, even when it scrolls out of view and back.
  */
 export function HeroVideo({ desktop, mobile }: { desktop: string | null; mobile: string | null }) {
   const [src, setSrc] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
   const ref = useRef<HTMLVideoElement>(null);
+  const heldRef = useRef(false);
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -36,12 +43,27 @@ export function HeroVideo({ desktop, mobile }: { desktop: string | null; mobile:
     const v = ref.current;
     if (!v || !src) return;
     const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) v.play().catch(() => undefined);
-      else v.pause();
+      if (e.isIntersecting && !heldRef.current) v.play().catch(() => undefined);
+      else if (!e.isIntersecting) v.pause();
     });
     io.observe(v);
-    return () => io.disconnect();
+    const onToggle = () => {
+      if (v.paused) {
+        heldRef.current = false;
+        v.play().catch(() => undefined);
+      } else {
+        heldRef.current = true;
+        v.pause();
+      }
+    };
+    window.addEventListener(REEL_TOGGLE, onToggle);
+    return () => {
+      io.disconnect();
+      window.removeEventListener(REEL_TOGGLE, onToggle);
+    };
   }, [src]);
+
+  const announce = (state: ReelState) => window.dispatchEvent(new CustomEvent<ReelState>(REEL_STATE, { detail: state }));
 
   if (!src) return null;
   return (
@@ -54,7 +76,11 @@ export function HeroVideo({ desktop, mobile }: { desktop: string | null; mobile:
       autoPlay
       preload="none"
       aria-hidden="true"
-      onPlaying={() => setPlaying(true)}
+      onPlaying={() => {
+        setPlaying(true);
+        announce('playing');
+      }}
+      onPause={() => announce('paused')}
       className="absolute inset-0 size-full object-cover transition-opacity duration-700"
       style={{ opacity: playing ? 1 : 0 }}
     />

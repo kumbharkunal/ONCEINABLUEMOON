@@ -423,7 +423,15 @@ html { overflow-x: clip; } /* keeps position: sticky working */
 - **Hero reel budgets** (desktop ≤ 4 MB, phone ≤ 2.5 MB) are enforced at build time. Phones never fall back to the desktop reel. The supplied reel's generator mark is cropped out with `REEL_CROP`.
 - **Coupon text in full ink** on moon-glow (ink-soft measured 4.44:1 there).
 - **Trust line:** pills under 64rem, discs above.
-- **Lenis anchor scrolling uses no offset**, because Lenis honours `scroll-margin-top`.
+- **Lenis anchor scrolling uses no offset**, because Lenis honours the root's `scroll-padding-top` (and any `scroll-margin-top`).
 - **First-visit intro trimmed to 0.9s** (it held Speed Index back at 1.2s).
 - **Footer wordmark is decorative** (`aria-hidden`); the name is read in the © line.
+- **Icons are Phosphor** (per-icon imports from `@phosphor-icons/react/dist/ssr/*`): `light` at 20px (phone, envelope), `bold` at 14–16px (arrows, close) to match the site's ~1.3–1.5px strokes, `fill` for play/pause. Brand logos stay official; moons and the mark stay custom.
+- **The hero reel can be paused** (WCAG 2.2.2): a paper disc at the stage's bottom-right appears once the reel plays; a reel paused by hand stays paused through scrolling.
+- **`html { scroll-padding: 96px 0 88px }`** replaces per-element `scroll-margin`. Anchors land in the same place (Lenis reads it too), and keyboard focus is never hidden under the nav pill or the floating WhatsApp button (WCAG 2.4.11).
+- **Short landscape screens:**
+  - the hero track is never shorter than its 540px stage
+  - the phone headline is capped at `14svh`
+  - the menu sheet scrolls, so every link stays reachable
+- **Audits (2026-10-21).** The web-design checklist passes, with two noted deviations: the display serif is 400 (Instrument Serif's only weight), and there is no WebGL moment (three of the four scroll-story patterns are covered without it). The ui-ux-pro-max pre-delivery items that apply to the web pass; light-only by brief, so the dark-mode rows don't apply.
 - **Taste inspector.** It runs with allowances for what the brief asks for: numbered lunar labels and label/value pairs, structural hairlines, the glass pill, the cream palette, the italic hero line, animated one-colour link underlines, the moon-phase process steps, the snap rows and the pinned stories. The manifesto and H3 are capped at 36px. Every kept pattern carries a `taste-skill-ignore` reason in the CSS.

@@ -41,6 +41,10 @@ Resume file. If a session stops, read this, then the approved plan
   - intro 0.9 s
   - favicon replaced (15 KB ico → 0.3 KB svg)
 
+- 2026-10-21 · Final audits:
+  - web-design checklist, ui-ux-pro-max pre-delivery, taste lint/inspect
+  - fixes from them: Phosphor icons wired in, a hero reel pause control, focus-safe `scroll-padding`, a process-panel hover, the 404 button at content width, and landscape fixes (hero track min-height, scrollable menu sheet)
+
 ## Next step
 
 Done for the pitch. Remaining items are Kunal's:

@@ -79,6 +79,7 @@ A missing image never breaks the page: it renders a tonal sand placeholder with 
   - Desktop: 1920×1080, ≤ 4 MB, saved as `public/videos/hero-reel.mp4`.
   - Phone: 1080×1920, ≤ 2.5 MB, saved as `public/videos/hero-reel-mobile.mp4`.
 - **How the build treats it:** files over the hard limits (6 MB desktop, 2.6 MB phone) are skipped. Phones never download the desktop reel. The video fades in over the still only after the page has loaded, and never under Save-Data, on slow connections or with reduced motion.
+- **Pause control:** visitors can pause it with the small disc in the hero's corner (WCAG 2.2.2).
 
 ```bash
 # desktop

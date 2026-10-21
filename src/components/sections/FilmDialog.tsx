@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { XIcon } from '@phosphor-icons/react/dist/ssr/X';
 import { youtubeEmbed } from '@/content/films';
 import { lockScroll, unlockScroll } from '@/lib/scroll';
 
@@ -53,9 +54,7 @@ export function FilmDialog() {
     >
       <div className="film-dialog-inner">
         <button type="button" onClick={close} className="film-dialog-close" aria-label="Close film">
-          <svg viewBox="0 0 16 16" className="size-4" aria-hidden="true">
-            <path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
+          <XIcon weight="bold" className="size-4" aria-hidden="true" />
         </button>
         <div className="film-dialog-frame">
           {film ? (

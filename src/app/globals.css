@@ -88,6 +88,10 @@ html.marathi-ready {
     background: var(--color-paper);
     color: var(--color-ink);
     overflow-x: clip;
+    /* Anchor jumps (native and Lenis) and focus scrolling keep clear of the floating nav pill and the
+       floating WhatsApp button, so keyboard focus is never hidden under either. */
+    scroll-padding-top: 96px;
+    scroll-padding-bottom: 88px;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
   }
@@ -136,9 +140,6 @@ html.marathi-ready {
   }
   .on-night :where(a, button, summary, [tabindex]):focus-visible {
     outline-color: var(--color-moon-glow);
-  }
-  [id] {
-    scroll-margin-top: 96px;
   }
   button {
     cursor: pointer;
@@ -565,8 +566,20 @@ html[data-intro="play"] .intro-word {
   box-shadow: /* taste-skill-ignore: the menu sheet is an overlay */
     0 12px 32px -10px rgb(var(--ink-rgb) / 0.28),
     inset 0 1px 0 rgb(255 255 255 / 0.6);
-  overflow: hidden;
+  /* Scrolls on its own when the screen is short (landscape phones), so every link stays reachable. */
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
   will-change: clip-path;
+}
+@media (max-height: 30rem) {
+  .menu-sheet nav {
+    padding-top: 80px;
+  }
+  .menu-sheet nav a {
+    font-size: 2rem;
+  }
 }
 html.is-locked,
 html.is-locked body {
@@ -623,6 +636,8 @@ html[data-intro="play"] {
 .hero-track {
   position: relative;
   height: 100svh;
+  /* Never shorter than the stage it holds (landscape phones), or the sticky stage overlaps the next section. */
+  min-height: 540px;
 }
 .hero-stage {
   position: sticky;
@@ -696,6 +711,37 @@ html[data-intro="play"] .hero-cue {
 .hero-cue-moon {
   animation: bob 2.4s var(--ease-in-out) infinite;
 }
+/* Pause / play for the hero reel (shown only while a reel exists and has started) */
+.hero-reel-toggle {
+  position: absolute;
+  z-index: 3;
+  top: max(84px, calc(env(safe-area-inset-top) + 78px));
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgb(var(--paper-rgb) / 0.82);
+  color: var(--color-ink);
+  animation: fade-in 0.4s var(--ease-out) both;
+  transition:
+    background-color 0.2s var(--ease-out),
+    transform 0.2s var(--ease-out);
+}
+.hero-reel-toggle:hover {
+  background: var(--color-paper);
+}
+.hero-reel-toggle:active {
+  transform: scale(0.94);
+}
+@media (min-width: 64rem) {
+  .hero-reel-toggle {
+    top: auto;
+    bottom: 28px;
+    right: var(--margin);
+  }
+}
 
 @media (max-width: 63.99rem) {
   /* The aperture opens to an inset, rounded window (like the menu sheet). Not full-bleed on purpose:
@@ -731,7 +777,8 @@ html[data-intro="play"] .hero-cue {
      Serif, and the copy box is 100vw − 60px wide. So both lines always fit on one line each (nowrap
      below), and the block keeps its height when the webfont swaps in (no layout shift). */
   .hero-title {
-    font-size: clamp(2.1rem, calc((100vw - 60px) / 7.3), 4.75rem);
+    /* 14svh only bites on short landscape screens. */
+    font-size: min(clamp(2.1rem, calc((100vw - 60px) / 7.3), 4.75rem), 14svh);
     line-height: 0.96;
     letter-spacing: -0.015em;
   }

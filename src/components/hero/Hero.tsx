@@ -1,10 +1,12 @@
 import { getImageProps } from 'next/image';
 import { preload } from 'react-dom';
+import { PlayIcon } from '@phosphor-icons/react/dist/ssr/Play';
 import { imageManifest } from '@/generated/images';
 import { heroReel } from '@/generated/media';
 import { Crescent } from '@/components/brand/MoonMark';
 import { WhatsAppLogo } from '@/components/brand/logos';
 import { HeroVideo } from '@/components/hero/HeroVideo';
+import { HeroReelToggle } from '@/components/hero/HeroReelToggle';
 import { heroMessage, waLink } from '@/lib/whatsapp';
 
 const ALT =
@@ -65,14 +67,6 @@ function HeroPicture() {
         style={{ backgroundColor: desktop.color }}
       />
     </picture>
-  );
-}
-
-function PlayGlyph({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 16 16" className={className} aria-hidden="true" focusable="false">
-      <path d="M5 3.5v9l7.5-4.5z" fill="currentColor" />
-    </svg>
   );
 }
 
@@ -139,7 +133,7 @@ export function Hero() {
                 </span>
               </a>
               <a href="#films" className="hero-cta-films link-reverse inline-flex min-h-11 items-center gap-2">
-                <PlayGlyph className="size-3.5" />
+                <PlayIcon weight="fill" className="size-3.5" aria-hidden="true" />
                 Watch our films
               </a>
             </div>
@@ -149,6 +143,8 @@ export function Hero() {
             <Crescent className="hero-cue-moon size-4" />
             <span>Scroll</span>
           </div>
+
+          {hasVideo ? <HeroReelToggle /> : null}
         </div>
       </div>
     </section>

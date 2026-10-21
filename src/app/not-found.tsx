@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { ArrowLeftIcon } from '@phosphor-icons/react/dist/ssr/ArrowLeft';
 import { moonLitPath } from '@/lib/moon-path';
 
 export const metadata: Metadata = {
@@ -25,9 +26,7 @@ export default function NotFound() {
       <Link href="/" className="btn btn-primary notfound-home mt-8">
         Back to the homepage
         <span className="btn-moon">
-          <svg viewBox="0 0 16 16" className="size-4" aria-hidden="true">
-            <path d="M11.5 8h-8M7 4.5L3.5 8 7 11.5" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          <ArrowLeftIcon weight="bold" className="size-4" aria-hidden="true" />
         </span>
       </Link>
     </section>

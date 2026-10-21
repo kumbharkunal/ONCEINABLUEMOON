@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { LazyMotion, MotionConfig } from 'motion/react';
 import * as m from 'motion/react-m';
+import { ArrowUpRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowUpRight';
 import { MoonMark } from '@/components/brand/MoonMark';
 import { FacebookLogo, InstagramLogo, WhatsAppLogo, YouTubeLogo } from '@/components/brand/logos';
 import { MoonProgress } from '@/components/nav/MoonProgress';
@@ -18,14 +19,6 @@ const spring = { type: 'spring', stiffness: 380, damping: 34 } as const;
 const EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const IN_OUT: [number, number, number, number] = [0.65, 0, 0.35, 1];
 const OPEN_CLIP = 'inset(0px 0px 0px 0px round 28px)';
-
-function ArrowUpRight({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 16 16" className={className} aria-hidden="true" focusable="false">
-      <path d="M4.5 11.5l7-7M5.5 4.5h6v6" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
 
 export function Navbar() {
   const [active, setActive] = useState<string | null>(null);
@@ -213,7 +206,7 @@ export function Navbar() {
           aria-label="Primary"
           layout
           transition={spring}
-          className="nav-pill fixed left-1/2 z-[40] hidden -translate-x-1/2 items-center gap-1 lg:flex"
+          className="nav-pill fixed left-1/2 z-40 hidden -translate-x-1/2 items-center gap-1 lg:flex"
           data-compact={compact}
         >
           <m.a
@@ -223,7 +216,7 @@ export function Navbar() {
             className="flex min-h-11 items-center gap-2.5 pr-3 pl-1 text-ink"
             aria-label={`${site.name}, back to top`}
           >
-            <MoonMark className="size-[26px] text-deep-moon" />
+            <MoonMark className="size-6.5 text-deep-moon" />
             <span className={cn('nav-wordmark font-display text-[1.25rem] leading-none whitespace-nowrap', compact && 'is-hidden')}>
               {site.name}
             </span>
@@ -243,7 +236,7 @@ export function Navbar() {
                     )}
                   >
                     {isActive ? (
-                      <m.span layoutId="nav-active" transition={spring} className="absolute inset-0 -z-0 rounded-full bg-sand" />
+                      <m.span layoutId="nav-active" transition={spring} className="absolute inset-0 z-0 rounded-full bg-sand" />
                     ) : null}
                     <span className="relative">{item.label}</span>
                   </a>
@@ -256,7 +249,7 @@ export function Navbar() {
             <a href="#contact" onClick={(e) => onDesktopLink(e, 'contact')} className="btn btn-primary min-h-11 pl-4 text-[0.875rem]">
               Check your date
               <span className="btn-moon size-8">
-                <ArrowUpRight className="size-3.5" />
+                <ArrowUpRightIcon weight="bold" className="size-3.5" aria-hidden="true" />
               </span>
             </a>
           </m.div>
@@ -266,7 +259,7 @@ export function Navbar() {
         <div className="lg:hidden">
           <div
             ref={pillRef}
-            className="nav-pill nav-pill-mobile fixed left-1/2 z-[62] flex -translate-x-1/2 items-center gap-1"
+            className="nav-pill nav-pill-mobile fixed left-1/2 z-62 flex -translate-x-1/2 items-center gap-1"
             data-open={open}
           >
             <a
@@ -319,7 +312,7 @@ export function Navbar() {
           </div>
 
           <m.div
-            className="fixed inset-0 z-[60] bg-ink/20"
+            className="fixed inset-0 z-60 bg-ink/20"
             initial={false}
             animate={{ opacity: open ? 1 : 0 }}
             transition={{ duration: open ? 0.4 : 0.3 }}
@@ -335,7 +328,7 @@ export function Navbar() {
             aria-modal="true"
             aria-label="Menu"
             inert={!open}
-            className="menu-sheet fixed inset-2 z-[61] flex flex-col"
+            className="menu-sheet fixed inset-2 z-61 flex flex-col"
             initial={false}
             animate={{ clipPath: open ? [clipFrom, OPEN_CLIP] : [OPEN_CLIP, clipFrom] }}
             transition={open ? { duration: 0.6, ease: EXPO } : { duration: 0.45, ease: IN_OUT }}

@@ -714,6 +714,27 @@
 .process-trigger:focus-visible {
   outline-offset: -4px;
 }
+/* A closed step answers the pointer: its moon swells a little and the name leans in (the individual
+   `translate` property, so it composes with the desktop names' `rotate`). */
+.process-trigger svg {
+  transition: transform 0.3s var(--ease-out);
+}
+.process-trigger .process-name {
+  transition: translate 0.3s var(--ease-out);
+}
+@media (hover: hover) {
+  .process-step:not(.is-open) .process-trigger:hover svg {
+    transform: scale(1.15);
+  }
+  .process-step:not(.is-open) .process-trigger:hover .process-name {
+    translate: 4px 0;
+  }
+}
+@media (hover: hover) and (min-width: 64rem) {
+  .process-step:not(.is-open) .process-trigger:hover .process-name {
+    translate: 0 -4px;
+  }
+}
 .process-step-1 .process-trigger:focus-visible,
 .process-step-2 .process-trigger:focus-visible {
   outline-color: var(--color-paper);
@@ -1431,6 +1452,7 @@ html.is-locked .moon-cursor {
   min-height: 82svh;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
   padding-top: 132px;
   padding-bottom: 96px;
