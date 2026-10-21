@@ -2,32 +2,34 @@
 @import "./sections.css" layer(components);
 
 /* ───────────── Tokens (DESIGN.md §2–§3, §7) ───────────── */
+/* Palette "Onyx & Zari Gold", taken from the studio's own logo (antique gold on black) and set on a
+   porcelain white: onyx is the one action colour, gold is the ornament, the night band is the one dark
+   field. Every pair is checked by scripts/contrast.mjs. */
 @theme {
   --color-*: initial;
   --color-transparent: transparent;
   --color-current: currentColor;
   --color-white: #ffffff;
-  --color-paper: #fbf8f2;
-  --color-cream: #f4eee3;
-  --color-sand: #e7dccb;
-  --color-ink: #1f1b16;
-  --color-ink-soft: #5b5348;
-  --color-moon-glow: #b9c8d9;
-  --color-moon: #6e86a4;
-  --color-deep-moon: #2e3c50;
-  --color-deep-moon-hover: #243041;
-  --color-night: #18202c;
-  --color-night-raised: #222c3b;
-  --color-champagne: #b89b6a;
-  --color-champagne-ink: #7a6337;
-  --color-step-1: #2e3c50;
-  --color-step-2: #46566f;
-  --color-step-3: #9fb0c5;
-  --color-step-4: #d7e0ea;
-  /* The sky from sunset to the blue moon (scrollbar). Each holds ≥ 3:1 on paper. */
-  --color-sky-sunset: #c8644a;
-  --color-sky-rose: #b65a86;
-  --color-sky-lilac: #7f72b3;
+  --color-paper: #faf9f6;
+  --color-cream: #f3f0ea;
+  --color-sand: #e7e1d6;
+  --color-parchment: #f1eadb;
+  --color-ink: #151311;
+  --color-ink-soft: #5a544b;
+  --color-onyx: #1a1714;
+  --color-onyx-hover: #322d27;
+  --color-night: #0f0e0c;
+  --color-night-raised: #1c1a17;
+  /* Gold, from the logo: gold is ornament on light grounds (2.2:1) and text only on night (8.4:1);
+     gold-deep draws moons and graphics on light (4.6:1); gold-ink is small gold text on light (5.4:1). */
+  --color-gold: #c2a878;
+  --color-gold-light: #e5d7b6;
+  --color-gold-deep: #8b6c38;
+  --color-gold-ink: #7a6337;
+  --color-step-1: #1a1714;
+  --color-step-2: #3a342d;
+  --color-step-3: #cdb88e;
+  --color-step-4: #ece5d6;
   --color-error: #8a2419;
   --color-success: #2f6b47;
   --color-whatsapp: #25d366;
@@ -57,6 +59,7 @@
 @theme inline {
   --font-display: var(--font-instrument-serif), "Iowan Old Style", Georgia, serif;
   --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-logo: var(--font-bebas), "Bebas Neue", "Arial Narrow", "Roboto Condensed", sans-serif;
   /* Tiro Devanagari Marathi is switched on (html.marathi-ready) only as its two touches approach the
      viewport, so its 61 KB never competes with the first screen. Until then: the system's Devanagari. */
   --font-marathi: var(--marathi-face, "Noto Serif Devanagari"), "Noto Serif Devanagari", "Kohinoor Devanagari", serif;
@@ -68,11 +71,11 @@ html.marathi-ready {
 
 :root {
   color-scheme: light;
-  --paper-rgb: 251 248 242;
-  --ink-rgb: 31 27 22;
-  --moon-glow-rgb: 185 200 217;
-  --deep-moon-rgb: 46 60 80;
-  --night-rgb: 24 32 44;
+  --paper-rgb: 250 249 246;
+  --ink-rgb: 21 19 17;
+  --gold-rgb: 194 168 120;
+  --onyx-rgb: 26 23 20;
+  --night-rgb: 15 14 12;
   --margin: clamp(16px, 4vw, 56px);
   --gutter: clamp(16px, 2.5vw, 32px);
   --section-y: clamp(96px, 12vw, 200px);
@@ -120,7 +123,7 @@ html.marathi-ready {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   ::selection {
-    background: var(--color-moon-glow);
+    background: var(--color-gold-light);
     color: var(--color-ink);
   }
   h1,
@@ -141,11 +144,11 @@ html.marathi-ready {
     display: block;
   }
   :where(a, button, summary, input, textarea, select, [tabindex]):focus-visible {
-    outline: 2px solid var(--color-deep-moon);
+    outline: 2px solid var(--color-onyx);
     outline-offset: 3px;
   }
   .on-night :where(a, button, summary, [tabindex]):focus-visible {
-    outline-color: var(--color-moon-glow);
+    outline-color: var(--color-gold);
   }
   button {
     cursor: pointer;
@@ -204,12 +207,12 @@ html.marathi-ready {
     transform: none;
   }
   .btn-primary {
-    background: var(--color-deep-moon);
+    background: var(--color-onyx);
     color: var(--color-paper);
     padding: 0 0.375rem 0 1.375rem;
   }
   .btn-primary:hover {
-    background: var(--color-deep-moon-hover);
+    background: var(--color-onyx-hover);
   }
   .btn-moon {
     width: 40px;
@@ -289,18 +292,18 @@ html.marathi-ready {
   }
   .chip[aria-pressed="true"],
   .chip:has(input:checked) {
-    background: var(--color-deep-moon);
+    background: var(--color-onyx);
     color: var(--color-paper);
   }
   .chip:active {
     transform: scale(0.97);
   }
   .chip:has(input:focus-visible) {
-    outline: 2px solid var(--color-deep-moon);
+    outline: 2px solid var(--color-onyx);
     outline-offset: 2px;
   }
 
-  /* Form fields (on the moon-glow coupon) */
+  /* Form fields (on the parchment coupon) */
   .field-label {
     display: block;
     font-size: var(--text-small);
@@ -389,7 +392,44 @@ html.marathi-ready {
   }
 }
 
-/* ───────────── Intro loader (first visit, CSS only, 0.9 s) ───────────── */
+/* ───────────── The studio's logo (BrandLogo, BrandWordmark) ───────────── */
+.brand-logo,
+.brand-wordmark {
+  display: block;
+  height: auto;
+}
+.brand-logo-ground {
+  fill: var(--color-night);
+}
+.brand-logo-gold {
+  fill: var(--color-gold);
+}
+.brand-logo-type {
+  font-family: var(--font-logo);
+}
+.brand-logo-reg {
+  font-family: var(--font-sans);
+}
+.brand-logo-tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  fill: var(--color-paper);
+}
+/* pathLength=1, so a dash offset of 1 hides the frame and 0 draws it in full (intro, footer reveal). */
+.brand-logo-frame {
+  fill: none;
+  stroke: var(--color-gold);
+  stroke-width: 2;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.brand-wordmark-frame {
+  fill: none;
+  stroke: var(--color-gold);
+  stroke-width: 1;
+}
+
+/* ───────────── Intro loader (first visit, CSS only, 0.9 s): the studio's logo ───────────── */
 .intro {
   display: none;
 }
@@ -403,56 +443,39 @@ html[data-intro="play"] .intro {
   pointer-events: none;
   animation: intro-out 0.35s var(--ease-in-out) 0.55s both;
 }
-html[data-intro="play"] .intro-moon {
-  animation: intro-moon-grow 0.4s var(--ease-in) 0.5s both;
+html[data-intro="play"] .intro-logo {
+  width: clamp(128px, 30vw, 172px);
+  animation: intro-logo 0.9s var(--ease-out) both;
 }
-html[data-intro="play"] .intro-disc {
-  animation: intro-tint 0.45s var(--ease-in-out) 0.1s both;
+html[data-intro="play"] .intro .brand-logo-frame {
+  animation: intro-frame 0.55s var(--ease-out) 0.08s both;
 }
-html[data-intro="play"] .intro-shadow {
-  animation: intro-wax 0.55s var(--ease-in-out) both;
+@keyframes intro-logo {
+  0% {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  40% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
 }
-html[data-intro="play"] .intro-word {
-  animation: intro-word 0.55s var(--ease-out) both;
-}
-@keyframes intro-wax {
+@keyframes intro-frame {
   from {
-    transform: translateY(0);
+    stroke-dashoffset: 1;
   }
   to {
-    transform: translateY(-100px);
-  }
-}
-@keyframes intro-tint {
-  from {
-    fill: var(--color-deep-moon);
-  }
-  to {
-    fill: var(--color-moon-glow);
-  }
-}
-@keyframes intro-moon-grow {
-  to {
-    transform: scale(26);
+    stroke-dashoffset: 0;
   }
 }
 @keyframes intro-out {
   to {
     opacity: 0;
     visibility: hidden;
-  }
-}
-@keyframes intro-word {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  50% {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-    transform: none;
   }
 }
 
@@ -533,8 +556,17 @@ html[data-intro="play"] .intro-word {
     background: rgb(var(--paper-rgb) / 0.95);
   }
 }
-.nav-wordmark.is-hidden {
-  display: none;
+/* The studio's logo as a small black label in the pill (it shrinks a little when the pill goes compact). */
+.nav-logo {
+  height: 34px;
+  width: auto;
+  transition: height 0.3s var(--ease-out);
+}
+.nav-logo.is-compact {
+  height: 30px;
+}
+.nav-logo-mobile {
+  height: 30px;
 }
 .nav-pill-mobile {
   top: max(12px, calc(env(safe-area-inset-top) + 6px));
@@ -543,8 +575,8 @@ html[data-intro="play"] .intro-word {
   max-width: calc(100vw - 24px);
 }
 @media (max-width: 22.5rem) {
-  .nav-pill-mobile .font-display {
-    font-size: 0.9375rem;
+  .nav-logo-mobile {
+    height: 27px;
   }
   .nav-pill-mobile .menu-button {
     padding-inline: 0.875rem;
@@ -554,14 +586,14 @@ html[data-intro="play"] .intro-word {
   fill: var(--color-sand);
 }
 .moon-progress-lit {
-  fill: var(--color-champagne);
+  fill: var(--color-gold);
   transition: fill 0.6s var(--ease-out);
 }
 .moon-progress[data-blue="true"] .moon-progress-lit {
-  fill: var(--color-moon);
+  fill: var(--color-gold-deep);
 }
 .moon-progress[data-blue="true"] {
-  filter: drop-shadow(0 0 5px rgb(110 134 164 / 0.55)); /* taste-skill-ignore: the nav moon glows blue at Contact */
+  filter: drop-shadow(0 0 5px rgb(var(--gold-rgb) / 0.7)); /* taste-skill-ignore: the nav moon glows blue at Contact */
 }
 .menu-sheet {
   border-radius: 28px;
@@ -577,7 +609,7 @@ html[data-intro="play"] .intro-word {
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  scrollbar-color: var(--color-moon) transparent;
+  scrollbar-color: var(--color-gold-deep) transparent;
   will-change: clip-path;
 }
 @media (max-height: 30rem) {
@@ -599,12 +631,11 @@ html.is-locked body {
   background: var(--color-paper) !important;
 }
 
-/* ───────────── Scrollbar: the sky from sunset to the blue moon ───────────── */
-/* The thumb is a pill of evening sky (sunset coral, rose, lilac, then the moon's blues), the same journey
-   the page takes from the dusk hero to the blue moon at Contact. It sits in a paper rim on a paper track.
-   Chromium and WebKit; Firefox draws a solid moon-blue thumb; phones keep their overlay scrollbars.
-   (A thumb that changes colour as you scroll was tried: Chromium clips the paper mask around it and
-   never repaints the thumb on class changes, so the sky lives inside the thumb instead.) */
+/* ───────────── Scrollbar: a bar of zari gold ───────────── */
+/* The thumb is a pill of the logo's gold, deepening to bronze and onyx like worn zari thread, in a paper
+   rim on a paper track. Chromium and WebKit; Firefox draws a solid deep-gold thumb; phones keep their
+   overlay scrollbars. (A thumb that changes colour as you scroll was tried: Chromium clips the paper mask
+   around it and never repaints the thumb on class changes, so the colour lives inside the thumb.) */
 html::-webkit-scrollbar {
   width: 14px;
 }
@@ -612,7 +643,7 @@ html::-webkit-scrollbar-track {
   background: var(--color-paper);
 }
 html::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, var(--color-sky-sunset), var(--color-sky-rose) 30%, var(--color-sky-lilac) 55%, var(--color-moon) 78%, var(--color-deep-moon)) padding-box; /* taste-skill-ignore: the scrollbar sky the client asked for */
+  background: linear-gradient(to bottom, var(--color-gold), var(--color-gold-deep) 55%, var(--color-onyx)) padding-box; /* taste-skill-ignore: the coloured scrollbar the client asked for */
   border: 3px solid var(--color-paper);
   border-radius: 999px;
 }
@@ -622,7 +653,7 @@ html::-webkit-scrollbar-thumb:active {
 }
 @supports not selector(::-webkit-scrollbar) {
   html {
-    scrollbar-color: var(--color-moon) var(--color-paper);
+    scrollbar-color: var(--color-gold-deep) var(--color-paper);
   }
 }
 
@@ -685,7 +716,7 @@ html[data-intro="play"] {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: var(--color-moon-glow);
+  background: var(--color-sand);
   clip-path: circle(150vmax at 50% 42%);
 }
 .hero-zoom,
@@ -710,7 +741,7 @@ html[data-intro="play"] {
   }
 }
 .hero-moon-fill {
-  background: var(--color-moon-glow);
+  background: var(--color-gold-light);
 }
 .hero-drift {
   animation: hero-drift 26s var(--ease-in-out) 1.6s infinite alternate;
@@ -894,7 +925,7 @@ html[data-intro="play"] .hero-cue {
   }
   .hero-ring circle {
     fill: none;
-    stroke: var(--color-champagne);
+    stroke: var(--color-gold);
     stroke-width: 1;
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
@@ -986,7 +1017,4 @@ html[data-intro="play"] .hero-cue {
   to {
     transform: scale(1.06) translate3d(-1.5%, -1%, 0);
   }
-}
-.intro-disc {
-  fill: var(--color-deep-moon);
 }

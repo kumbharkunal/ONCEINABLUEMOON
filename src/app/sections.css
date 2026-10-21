@@ -24,6 +24,12 @@
 [data-reveal="lines"] {
   text-wrap: wrap;
 }
+/* A heading rising line by line (bootstrap.ts splitLines). The clip reaches past the line box so
+   ascenders, descenders and italic overhangs are never cut while a line rises through it. */
+.split-mask {
+  display: block;
+  clip-path: inset(-0.2em -0.6em);
+}
 .split-line {
   display: block;
 }
@@ -40,12 +46,12 @@
 }
 .manifesto-moon-ring {
   fill: none;
-  stroke: var(--color-champagne);
+  stroke: var(--color-gold);
   stroke-width: 1;
   opacity: 0.45;
 }
 .manifesto-moon-lit {
-  fill: var(--color-moon-glow);
+  fill: var(--color-gold-light);
   opacity: 0.3;
 }
 .manifesto-text {
@@ -110,7 +116,7 @@
   min-height: 92px;
   padding: 0 32px;
   border-radius: 999px;
-  background: var(--color-deep-moon);
+  background: var(--color-onyx);
 }
 .trust-disc {
   aspect-ratio: 1;
@@ -187,7 +193,7 @@
 .marquee-moon {
   width: 0.3em;
   height: 0.3em;
-  color: var(--color-champagne);
+  color: var(--color-gold);
 }
 
 /* ───────────── Stories ───────────── */
@@ -321,7 +327,7 @@
 }
 .stories-arc path {
   fill: none;
-  stroke: var(--color-champagne);
+  stroke: var(--color-gold);
   stroke-width: 1;
   stroke-dasharray: 2 6;
   opacity: 0.8;
@@ -334,7 +340,7 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: var(--color-moon-glow);
+  background: var(--color-gold);
   box-shadow: inset calc((0.5 - var(--lit)) * 36px) 0 0 0 var(--color-sand); /* taste-skill-ignore: draws the lit part of the moon (its terminator), not a shadow */
 }
 
@@ -359,7 +365,7 @@
   width: clamp(56px, 8vw, 128px);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: var(--color-moon-glow);
+  background: var(--color-gold-light);
 }
 .films-featured {
   display: grid;
@@ -405,7 +411,7 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--color-moon-glow);
+  background: var(--color-gold-light);
   color: var(--color-night);
   transition: scale 0.35s var(--ease-out);
 }
@@ -420,7 +426,7 @@
   scale: 1.1;
 }
 .film:focus-visible {
-  outline: 2px solid var(--color-moon-glow);
+  outline: 2px solid var(--color-gold);
   outline-offset: 6px;
 }
 .film-meta {
@@ -844,7 +850,7 @@
   --card: var(--color-sand);
 }
 .faq-card:nth-child(3n) {
-  --card: var(--color-moon-glow);
+  --card: var(--color-parchment);
 }
 .faq-card + .faq-card {
   margin-top: 22px;
@@ -905,7 +911,7 @@
   rotate: 0deg;
 }
 .faq-summary:hover .faq-q {
-  color: var(--color-deep-moon);
+  color: var(--color-gold-deep);
 }
 .faq-a {
   padding-bottom: 26px;
@@ -938,7 +944,7 @@
 }
 .about-swash path {
   fill: none;
-  stroke: var(--color-champagne);
+  stroke: var(--color-gold);
   stroke-width: 2;
   stroke-linecap: round;
 }
@@ -962,6 +968,12 @@
   overflow: hidden;
   margin-top: 40px;
   margin-bottom: max(-22%, -140px);
+}
+/* The disc inside carries the colour and the photo, so the reveal can clip it while the circle itself
+   stays unclipped for the observer that times it. */
+.about-circle-disc {
+  position: absolute;
+  inset: 0;
   background: var(--color-sand);
 }
 .about-right {
@@ -1053,7 +1065,7 @@
   font-size: 0.8125rem;
   font-weight: 500;
   line-height: 1.4;
-  color: var(--color-champagne-ink);
+  color: var(--color-gold-ink);
   background: var(--color-cream);
   padding: 0.25rem 0.625rem;
   border-radius: 999px;
@@ -1133,7 +1145,7 @@
 .coupon {
   position: relative;
   display: grid;
-  background: var(--color-moon-glow);
+  background: var(--color-parchment);
   color: var(--color-ink);
 }
 .coupon-stub {
@@ -1182,12 +1194,12 @@
   fill: rgb(var(--night-rgb) / 0.42);
 }
 .live-moon-lit {
-  fill: var(--color-paper);
+  fill: var(--color-gold-light);
 }
 .coupon-caption {
   padding: 0 4px;
 }
-/* ink-soft on moon-glow is 4.4:1; everything on the coupon uses full ink. */
+/* Everything on the coupon is set in full ink. */
 .coupon .text-ink-soft {
   color: var(--color-ink);
 }
@@ -1261,46 +1273,25 @@ fieldset {
 .footer-phases li {
   aspect-ratio: 1;
 }
-.footer-mark {
+/* The studio's own logo closes the page, beside every way in. */
+.footer-main {
   margin-top: clamp(28px, 4vw, 56px);
-  font-size: clamp(3.4rem, 22vw, 21rem);
-  line-height: 0.9;
-  letter-spacing: -0.02em;
-  color: var(--color-ink);
+  display: grid;
+  gap: clamp(36px, 5vw, 56px);
 }
-.footer-mark-line {
-  display: block;
-  white-space: nowrap;
-}
-.footer-mark-line.is-masked {
-  overflow: clip;
-  padding-bottom: 0.06em;
-}
-.footer-mark-inner {
-  display: inline-block;
-}
-.footer-o {
-  display: inline-block;
-  width: 0.7em;
-  height: 0.7em;
-  margin-right: 0.03em;
-  vertical-align: -0.01em;
-}
-.footer-o-shadow {
-  fill: var(--color-sand);
-}
-.footer-o-lit {
-  fill: var(--color-moon);
-}
-@media (min-width: 48rem) {
-  .footer-mark {
-    font-size: clamp(3.4rem, 19vw, 21rem);
-  }
+.footer-logo {
+  width: clamp(176px, 20vw, 248px);
 }
 .footer-grid {
-  margin-top: clamp(40px, 5vw, 72px);
   display: grid;
   gap: 32px;
+}
+@media (min-width: 64rem) {
+  .footer-main {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(48px, 6vw, 96px);
+  }
 }
 .footer-h {
   margin-bottom: 8px;
@@ -1336,7 +1327,14 @@ fieldset {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+/* Beside the logo the four groups sit two by two (four in a row only where there is real room). */
 @media (min-width: 64rem) {
+  .footer-grid {
+    column-gap: clamp(40px, 5vw, 80px);
+    row-gap: 36px;
+  }
+}
+@media (min-width: 110rem) {
   .footer-grid {
     grid-template-columns: 1.1fr 1.3fr 0.8fr 1.2fr;
   }
@@ -1410,13 +1408,13 @@ html.is-locked .moon-cursor {
 }
 .moon-cursor[data-mode="link"] .moon-cursor-ring::before {
   scale: 0.66;
-  background: rgb(var(--deep-moon-rgb) / 0.12);
+  background: rgb(var(--onyx-rgb) / 0.12);
   border-color: transparent;
 }
 .moon-cursor[data-mode="play"] .moon-cursor-ring::before,
 .moon-cursor[data-mode="view"] .moon-cursor-ring::before {
   scale: 2.4;
-  background: var(--color-moon-glow);
+  background: var(--color-gold-light);
   border-color: transparent;
 }
 .moon-cursor[data-mode="play"] .moon-cursor-label,
@@ -1467,7 +1465,7 @@ html.is-locked .moon-cursor {
   stroke-width: 0.12;
 }
 .notfound-moon-lit {
-  fill: var(--color-moon);
+  fill: var(--color-gold-deep);
   opacity: 0;
   transition: opacity 0.6s var(--ease-out);
 }

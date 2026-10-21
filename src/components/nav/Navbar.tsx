@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { LazyMotion, MotionConfig } from 'motion/react';
 import * as m from 'motion/react-m';
 import { ArrowUpRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowUpRight';
-import { MoonMark } from '@/components/brand/MoonMark';
+import { BrandWordmark } from '@/components/brand/BrandLogo';
 import { FacebookLogo, InstagramLogo, WhatsAppLogo, YouTubeLogo } from '@/components/brand/logos';
 import { MoonProgress } from '@/components/nav/MoonProgress';
 import { mobileNav, nav, site } from '@/config/site';
@@ -213,13 +213,10 @@ export function Navbar() {
             layout="position"
             href="#top"
             onClick={(e) => onDesktopLink(e, 'top')}
-            className="flex min-h-11 items-center gap-2.5 pr-3 pl-1 text-ink"
+            className="flex min-h-11 items-center pr-2 pl-1"
             aria-label={`${site.name}, back to top`}
           >
-            <MoonMark className="size-6.5 text-deep-moon" />
-            <span className={cn('nav-wordmark font-display text-[1.25rem] leading-none whitespace-nowrap', compact && 'is-hidden')}>
-              {site.name}
-            </span>
+            <BrandWordmark className={cn('nav-logo', compact && 'is-compact')} />
           </m.a>
           <m.ul layout="position" className="flex items-center">
             {nav.map((item) => {
@@ -271,11 +268,10 @@ export function Navbar() {
                   requestClose();
                 } else scrollToId('top');
               }}
-              className="flex min-h-11 items-center gap-2 pr-2 pl-1 text-ink"
+              className="flex min-h-11 items-center pr-2 pl-1"
               aria-label={`${site.name}, back to top`}
             >
-              <MoonMark className="size-6 text-deep-moon" />
-              <span className="font-display text-[1.0625rem] leading-none whitespace-nowrap">{site.name}</span>
+              <BrandWordmark className="nav-logo nav-logo-mobile" />
             </a>
             <button
               ref={buttonRef}

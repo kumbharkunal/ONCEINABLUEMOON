@@ -21,13 +21,15 @@ export function About() {
             <MoonMark className="size-7 text-ink/20" />
             <span className="text-small text-ink-soft">Portrait coming soon</span>
           </div>
-          <div className="about-circle" data-reveal="media">
-            <SmartImage
-              id="about-hands"
-              alt="A filmmaker’s hands on a cinema camera at a wedding"
-              sizes="(min-width: 64rem) 36vw, 86vw"
-              className="absolute inset-0"
-            />
+          <div className="about-circle">
+            <div className="about-circle-disc" data-reveal="media">
+              <SmartImage
+                id="about-hands"
+                alt="A filmmaker’s hands on a cinema camera at a wedding"
+                sizes="(min-width: 64rem) 36vw, 86vw"
+                className="absolute inset-0"
+              />
+            </div>
           </div>
         </div>
         <div className="about-right">

@@ -33,8 +33,8 @@ export function ProcessAccordion({ steps }: { steps: Step[] }) {
                 <MoonPhase
                   phase={phases[i]}
                   className="size-6 shrink-0"
-                  lit={dark ? 'var(--color-paper)' : 'var(--color-deep-moon)'}
-                  shadow={dark ? 'rgb(251 248 242 / 0.18)' : 'rgb(46 60 80 / 0.16)'}
+                  lit={dark ? 'var(--color-gold-light)' : 'var(--color-onyx)'}
+                  shadow={dark ? 'rgb(var(--paper-rgb) / 0.18)' : 'rgb(var(--onyx-rgb) / 0.16)'}
                 />
                 <span className="process-name font-display">{step.title}</span>
               </button>

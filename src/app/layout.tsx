@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import { marathi, sans, serif } from './fonts';
+import { logo, marathi, sans, serif } from './fonts';
 import { site } from '@/config/site';
 import { BrandDefs } from '@/components/brand/logos';
 import { Intro } from '@/components/Intro';
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#FBF8F2',
+  themeColor: '#FAF9F6',
   colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
@@ -68,7 +68,7 @@ const prePaint = `(function(){var d=document.documentElement;d.classList.add('js
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en-IN" suppressHydrationWarning className={cn(serif.variable, sans.variable, marathi.variable)}>
+    <html lang="en-IN" suppressHydrationWarning className={cn(serif.variable, sans.variable, logo.variable, marathi.variable)}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: prePaint }} />
       </head>

@@ -24,7 +24,7 @@ export function TrustLine() {
             <MoonPhase
               phase={0.08 + i * 0.105}
               className="size-4 shrink-0"
-              lit="var(--color-moon)"
+              lit="var(--color-gold-deep)"
               shadow="var(--color-sand)"
             />
             <span className="text-small text-ink-soft">{f.small}</span>

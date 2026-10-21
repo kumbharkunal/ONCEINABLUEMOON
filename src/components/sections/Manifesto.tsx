@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { SmartImage } from '@/components/ui/SmartImage';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { moonLitPath } from '@/lib/moon-path';
@@ -7,6 +8,17 @@ export const MANIFESTO_MOON_PHASE = 0.2;
 
 function Dot({ id, alt }: { id: 'dot-antarpat' | 'dot-haldi' | 'dot-paithani'; alt: string }) {
   return <SmartImage as="span" id={id} alt={alt} sizes="80px" quietPlaceholder className="manifesto-dot" />;
+}
+
+/** Each word in its own span, so the scroll can light them one at a time without splitting text in the browser. */
+function Words({ text }: { text: string }) {
+  const words = text.split(' ');
+  return words.map((word, i) => (
+    <Fragment key={i}>
+      <span className="mw">{word}</span>
+      {i < words.length - 1 && ' '}
+    </Fragment>
+  ));
 }
 
 /** One statement, lit word by word as it passes; three moments sit inside it as small moons. */
@@ -25,19 +37,20 @@ export function Manifesto() {
           The idea
         </SectionLabel>
         <p className="manifesto-text" data-manifesto-text>
-          Some moments come only once in a blue moon: the hush before the{' '}
+          <Words text="Some moments come only once in a blue moon: the hush before the" />{' '}
           <span className="whitespace-nowrap">
-            antarpat <Dot id="dot-antarpat" alt="A bride’s eyes above the antarpat cloth" />
+            <Words text="antarpat" /> <Dot id="dot-antarpat" alt="A bride’s eyes above the antarpat cloth" />
           </span>{' '}
-          falls, Aaji laughing through the{' '}
+          <Words text="falls, Aaji laughing through the" />{' '}
           <span className="whitespace-nowrap">
-            haldi <Dot id="dot-haldi" alt="A bride laughing during her haldi" />,
+            <Words text="haldi" /> <Dot id="dot-haldi" alt="A bride laughing during her haldi" />
+            <span className="mw">,</span>
           </span>{' '}
-          the last light caught in a{' '}
+          <Words text="the last light caught in a" />{' '}
           <span className="whitespace-nowrap">
-            Paithani’s <Dot id="dot-paithani" alt="The gold zari border of a Paithani saree" />
+            <Words text="Paithani’s" /> <Dot id="dot-paithani" alt="The gold zari border of a Paithani saree" />
           </span>{' '}
-          gold. We stay close, keep it fun, classy and natural, and give them back to you, frame by frame.
+          <Words text="gold. We stay close, keep it fun, classy and natural, and give them back to you, frame by frame." />
         </p>
       </div>
     </section>

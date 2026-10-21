@@ -67,7 +67,7 @@ export function FilmDialog() {
             />
           ) : null}
         </div>
-        {film ? <p className="mt-4 text-body text-moon-glow">{film.title}</p> : null}
+        {film ? <p className="mt-4 text-body text-gold-light">{film.title}</p> : null}
       </div>
     </dialog>
   );

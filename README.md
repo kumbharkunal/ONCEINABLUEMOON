@@ -1,9 +1,10 @@
 # Once in a Blue Moon: homepage
 
 A one-page website for **Once in a Blue Moon**, the Nashik wedding photography and cinematic film studio of
-Dhiraj Pawar. It's built on one idea: the *chandrakor* (the crescent a Maharashtrian bride wears) waxes into a
-full blue moon. The crescent is the logo mark, the hero aperture, the nav progress moon, the section numbers and
-the dividers. The page ends in a coupon that shows the real moon on your wedding night.
+Dhiraj Pawar. It's dressed in the studio's own identity, an antique-gold-on-black logo, set on a porcelain page
+("Onyx & Zari Gold"). It's built on one idea: the *chandrakor* (the crescent a Maharashtrian bride wears) waxes
+into a full moon. The crescent shapes the hero aperture, the nav progress moon, the section numbers and the
+dividers. The page ends in a coupon that shows the real moon on your wedding night.
 
 **Live demo:** https://onceinabluemoon-co-in.vercel.app (`noindex` until launch)
 
@@ -17,7 +18,7 @@ the dividers. The page ends in a coupon that shows the real moon on your wedding
 - **Framework:** Next.js 16.4 (App Router, Turbopack, Cache Components), React 19.3, TypeScript (strict).
 - **Styles and type:** Tailwind CSS 4 with tokens in `src/app/globals.css`. Fonts: Instrument Serif + Instrument Sans, and Tiro Devanagari Marathi for the two Marathi touches, all via `next/font`.
 - **Motion:**
-  - GSAP 3.15 (ScrollTrigger, SplitText, DrawSVG) and Lenis 1.3 (smooth wheel scroll on desktop only). Both load after the first paint, and only when the visitor allows motion.
+  - GSAP 3.15 (ScrollTrigger) and Lenis 1.3 (smooth wheel scroll on desktop only). Both load after the first paint, and only when the visitor allows motion. Once-only reveals share one IntersectionObserver, so the setup stays light on phones.
   - Motion 14 (`LazyMotion` + `m`) for the nav.
 - **Icons:** Phosphor icons. Brand logos are the official marks (Simple Icons, CC0) in their official colours.
 - **Image pipeline:** sharp. It produces hashed outputs, a typed manifest, and tonal placeholders while an image is missing.
@@ -56,7 +57,8 @@ Both are set in Vercel for Production and Preview. Locally, the site falls back 
 | Reviews | `src/content/reviews.ts` | **Samples**, tagged on the page. Replace with real words (with permission) or remove the section. |
 | Photographs | `image-inbox/` → `npm run images` | **AI placeholders** (see below) |
 | Hero video | `public/videos/` | Optional (see below) |
-| Logo | `src/components/brand/MoonMark.tsx` | A new chandrakor mark designed for this pitch. The studio's own logo is not used. |
+| Logo | `src/components/brand/BrandLogo.tsx` | The studio's own logo (from their Instagram), redrawn as SVG with Bebas Neue standing in for their typeface. Swap in their master artwork (SVG) when they send it. |
+| Colours | `src/app/globals.css` (`@theme`) | "Onyx & Zari Gold", taken from the logo; every pair checked by `node scripts/contrast.mjs` |
 | Instagram follower count | — | Not shown, because it couldn't be verified |
 
 ## Swapping in real photographs

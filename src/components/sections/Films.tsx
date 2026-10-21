@@ -44,8 +44,8 @@ function FilmCard({ film, featured = false, className }: { film: Film; featured?
         <span className={cn('film-name font-display text-paper', featured ? 'text-h3' : 'text-[1.375rem] leading-tight')}>
           {film.couple}
         </span>
-        <span className="film-duration text-small tabular-nums text-moon-glow">{film.duration}</span>
-        <span className="film-kind text-small text-moon-glow">
+        <span className="film-duration text-small tabular-nums text-gold-light">{film.duration}</span>
+        <span className="film-kind text-small text-gold-light">
           {film.kind}, {film.place}
         </span>
       </span>
@@ -70,19 +70,19 @@ export function Films() {
                 Watch it the way it felt.
               </h2>
             </div>
-            <p className="col-span-4 max-w-[36ch] text-body text-moon-glow lg:col-span-4 lg:col-start-9" data-reveal="fade">
+            <p className="col-span-4 max-w-[36ch] text-body text-gold-light lg:col-span-4 lg:col-start-9" data-reveal="fade">
               Real couples, real places, from Bhimashankar to Thailand. Press play.
             </p>
           </div>
 
           <div className="films-featured mt-14 lg:mt-20">
             <FilmCard film={featuredFilm} featured />
-            <p className="films-featured-note text-body text-moon-glow" data-reveal="fade">
+            <p className="films-featured-note text-body text-gold-light" data-reveal="fade">
               {featuredFilm.description} Shot and edited by Dhiraj.
             </p>
           </div>
 
-          <ul className="films-grid mt-16 lg:mt-24">
+          <ul className="films-grid mt-16 lg:mt-24" data-swipe-row>
             {otherFilms.map((film, i) => (
               <li key={film.id} className={`films-cell films-cell-${i + 1}`}>
                 <FilmCard film={film} />

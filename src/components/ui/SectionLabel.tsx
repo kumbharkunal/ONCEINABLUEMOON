@@ -21,12 +21,12 @@ export function SectionLabel({ n, children, tone = 'day', className }: Props) {
   return (
     <p
       data-reveal="label"
-      className={cn('flex items-center gap-2.5 text-small', night ? 'text-moon-glow' : 'text-ink-soft', className)}
+      className={cn('flex items-center gap-2.5 text-small', night ? 'text-gold-light' : 'text-ink-soft', className)}
     >
       <MoonPhase
         phase={labelPhase(n, LABEL_TOTAL)}
         className="size-[1.125rem]"
-        lit={night ? 'var(--color-moon-glow)' : 'var(--color-moon)'}
+        lit={night ? 'var(--color-gold-light)' : 'var(--color-gold-deep)'}
         shadow={night ? 'var(--color-night-raised)' : 'var(--color-sand)'}
       />
       <span className={cn('font-display text-body italic leading-none', night ? 'text-paper' : 'text-ink')}>

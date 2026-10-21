@@ -1,4 +1,4 @@
-import { Instrument_Sans, Instrument_Serif, Tiro_Devanagari_Marathi } from 'next/font/google';
+import { Bebas_Neue, Instrument_Sans, Instrument_Serif, Tiro_Devanagari_Marathi } from 'next/font/google';
 
 export const serif = Instrument_Serif({
   subsets: ['latin'],
@@ -11,6 +11,14 @@ export const serif = Instrument_Serif({
 export const sans = Instrument_Sans({
   subsets: ['latin'],
   variable: '--font-instrument-sans',
+  display: 'swap',
+});
+
+// The studio's logo face (condensed capitals). Used only inside the logo lockups (BrandLogo, BrandWordmark).
+export const logo = Bebas_Neue({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-bebas',
   display: 'swap',
 });
 

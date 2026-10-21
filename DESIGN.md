@@ -47,11 +47,12 @@ This file is the single source of truth for the homepage. Precedence when anythi
 ## 1. Visual Theme & Atmosphere
 
 **Style:** Editorial luxury, one-motif system (taste direction `one-motif`, seed 484166439).
-**Keywords:** paper, moonlight, Paithani, unhurried, candid, warm film grain, quiet confidence, one shape.
+**Keywords:** porcelain paper, onyx, zari gold, Paithani, unhurried, candid, warm film grain, quiet confidence, one shape.
 **Tone:** fun, classy, natural; NOT glossy, not "royal" bling, not template-luxury.
-**Feel:** a wedding invitation printed on warm paper, held up to moonlight.
-**Interaction tier:** **L3** (immersive): a scroll-driven hero, one pinned horizontal story, a cursor, a WebGL detail.
-**Dependencies:** GSAP 3.15 (ScrollTrigger, SplitText, DrawSVG, MotionPath) + Lenis 1.3 (desktop wheel only) + Motion 14 (UI state). All of them load after first paint.
+**Feel:** a wedding invitation printed on fine paper, black and gold like the studio's own logo, held up to moonlight.
+**Brand mark:** the studio's own logo (antique-gold condensed caps in a gold frame on black, "Emotions through storys."), redrawn as SVG in `src/components/brand/BrandLogo.tsx`. It appears as a black label in the nav, in full in the footer and in the first-visit intro. The chandrakor moons remain the page's motif.
+**Interaction tier:** **L3** (immersive): a scroll-driven hero, one pinned horizontal story, a cursor.
+**Dependencies:** GSAP 3.15 (ScrollTrigger only) + Lenis 1.3 (desktop wheel only) + Motion 14 (UI state). All of them load after first paint.
 
 The motif at four scales:
 - **Giant:** the hero aperture, about 118svh, rising from the lower right; the footer "O".
@@ -61,45 +62,62 @@ The motif at four scales:
 
 ## 2. Color Palette & Roles
 
+**Palette "Onyx & Zari Gold" (2026-10-21, replacing the first navy-and-moon-blue palette, which the client didn't like).**
+
+Why these colours:
+- **The client's own identity:** their logo is antique gold condensed caps in a gold frame on black. A palette taken from it makes the site look like *their* brand, not a template.
+- **The ui-ux-pro-max palette database:**
+  - Its "Luxury / Premium Brand" profile is warm black `#1C1917` + antique gold on warm white: "Premium black + gold accent".
+  - Its "Photography Studio" profile is black-and-white contrast.
+  - The "Wedding / Event" profile (romantic pink) was rejected as a cliché.
+- **frontend-design:** ground colour in the subject. Gold is the *zari* of a Paithani border and the gold of the logo. The page avoids the generated-page defaults (cream with a terracotta accent, navy with one bright accent).
+- **Brief:** a light page with at most one dark band. The ground is a porcelain white, cleaner than the earlier yellow cream; onyx is the one action colour; gold is the ornament; the Films band is the one dark field.
+
 ```css
 :root {
-  /* Grounds */
-  --paper: #FBF8F2;  --paper-rgb: 251 248 242;   /* page ground */
-  --cream: #F4EEE3;  --cream-rgb: 244 238 227;   /* one tone step: tiles, panels */
-  --sand:  #E7DCCB;  --sand-rgb: 231 220 203;    /* second step: placeholders, chips at rest */
-  --night: #18202C;  --night-rgb: 24 32 44;      /* Films band only */
-  --night-raised: #222C3B;                       /* surfaces inside the night band */
+  /* Grounds: porcelain, not yellow cream */
+  --paper: #FAF9F6;  --paper-rgb: 250 249 246;  /* page ground */
+  --cream: #F3F0EA;                             /* one tone step: tiles, panels */
+  --sand:  #E7E1D6;                             /* second step: placeholders, chips at rest, moon shadows */
+  --parchment: #F1EADB;                         /* the contact coupon (an invitation card) */
+  --night: #0F0E0C;  --night-rgb: 15 14 12;     /* the Films band and the logo's black */
+  --night-raised: #1C1A17;                      /* surfaces inside the night band */
 
   /* Ink */
-  --ink: #1F1B16;      --ink-rgb: 31 27 22;      /* all running text */
-  --ink-soft: #5B5348;                           /* secondary text (≥ 5.5:1 on every light ground) */
+  --ink: #151311;    --ink-rgb: 21 19 17;       /* all running text */
+  --ink-soft: #5A544B;                          /* secondary text (≥ 5.75:1 on every light ground) */
 
-  /* Moon */
-  --moon-glow: #B9C8D9; --moon-glow-rgb: 185 200 217; /* moon fills, coupon card, night secondary text */
-  --moon: #6E86A4;                                    /* large type / graphics only (3.5:1) */
-  --deep-moon: #2E3C50; --deep-moon-rgb: 46 60 80;    /* THE action colour: buttons, links, focus */
-  --deep-moon-hover: #243041;
+  /* Onyx: THE action colour */
+  --onyx: #1A1714;   --onyx-rgb: 26 23 20;      /* buttons, the nav CTA, selected chips, links, focus rings */
+  --onyx-hover: #322D27;
 
-  /* Gold */
-  --champagne: #B89B6A;      /* decorative hairlines & ornaments only (2.5:1, never text) */
-  --champagne-ink: #7A6337;  /* small gold text (Marathi eyebrow) 5.4:1 */
+  /* Zari gold, from the studio's logo */
+  --gold: #C2A878;   --gold-rgb: 194 168 120;   /* logo gold: ornament on light grounds, text on night */
+  --gold-light: #E5D7B6;                        /* moons and secondary text on night, selection */
+  --gold-deep: #8B6C38;                         /* moons and graphics on light grounds, hover text */
+  --gold-ink: #7A6337;                          /* small gold text on light grounds (the Marathi line) */
 
-  /* Process tints (dark → light = new moon → full moon) */
-  --step-1: #2E3C50; --step-2: #46566F; --step-3: #9FB0C5; --step-4: #D7E0EA;
+  /* Process tints (onyx → umber → gold → parchment) */
+  --step-1: #1A1714; --step-2: #3A342D; --step-3: #CDB88E; --step-4: #ECE5D6;
 
   /* Semantic */
-  --error: #8A2419;   /* 8.4:1 paper, 5.3:1 moon-glow */
+  --error: #8A2419;
   --success: #2F6B47;
   --hairline: rgb(var(--ink-rgb) / 0.12);
-  --hairline-night: rgb(var(--moon-glow-rgb) / 0.2);
 }
 ```
 
-**Measured contrast** (`node scripts/contrast.mjs`): ink/paper 16.2 · ink-soft/paper 7.1 · ink-soft/sand 5.6 · deep-moon/paper 10.6 · paper/deep-moon 10.6 · paper/night 15.5 · moon-glow/night 9.6 · ink/moon-glow 10.1 · champagne-ink/paper 5.4 · moon/paper 3.5 (large only) · error/moon-glow 5.3 · paper/step-2 7.0 · ink/step-3 7.7.
+**Measured contrast** (`node scripts/contrast.mjs`, all pass):
+- **Body text on light grounds:** ink/paper 17.6 · ink/parchment 15.5 · ink-soft/paper 7.1 · ink-soft/sand 5.75.
+- **The action colour:** paper/onyx 17.0 · paper/onyx-hover 13.0.
+- **Gold on light grounds:** gold-ink/paper 5.4 · gold-deep/paper 4.6 (graphics) · gold/paper 2.2 (ornament only).
+- **The night band:** paper/night 18.3 · gold-light/night 13.5 · gold/night 8.4.
+- **States and tints:** error/parchment 7.5 · paper/step-2 11.7 · ink/step-3 9.6.
 
 **Color rules:**
 - Components never hard-code hex; they use the variables (or Tailwind tokens mapped to them).
-- One accent: **deep-moon** marks the action (primary buttons, links, focus rings, the coupon's submit). Blue moon fills are the motif, not the accent.
+- One accent: **onyx** marks the action (primary buttons, the nav CTA, links, focus rings, the coupon's submit). Gold is ornament and the logo; deep gold draws the moons on light grounds.
+- The bright logo gold is never text on a light ground (2.2:1). Small gold text uses gold-ink.
 - Light page. The **Films band is the only dark field**. Process step 1 and the hero scrim are components inside light sections.
 - Surfaces separate by a step in tone (paper → cream → sand), never by a box outline. Hairlines appear only where they carry structure: service rows, FAQ, form fields, footer.
 - Running text is always full ink. Grey is never used for body copy.
@@ -144,20 +162,20 @@ Five text steps (plus the footer mark, which is a brand graphic):
 .btn { display:inline-flex; align-items:center; gap:.75rem; min-height:52px; padding:0 .375rem 0 1.375rem;
   border-radius:999px; font:500 0.9375rem/1 var(--font-sans); letter-spacing:.005em;
   transition: background-color .2s var(--ease-out), color .2s var(--ease-out), transform .2s var(--ease-out); }
-.btn-primary { background:var(--deep-moon); color:var(--paper); }
+.btn-primary { background:var(--onyx); color:var(--paper); }
 .btn-primary .btn-moon { width:40px; height:40px; border-radius:50%; display:grid; place-items:center;
   background:rgb(var(--paper-rgb) / .14); transition: transform .3s var(--ease-out), background-color .3s; }
-.btn-primary:hover { background:var(--deep-moon-hover); }
+.btn-primary:hover { background:var(--onyx-hover); }
 .btn-primary:hover .btn-moon { transform: translate(2px,-2px) scale(1.06); background:rgb(var(--paper-rgb) / .22); }
 .btn-primary:active { transform: scale(.98); }
-.btn:focus-visible { outline:2px solid var(--deep-moon); outline-offset:3px; }
-.on-night .btn:focus-visible { outline-color: var(--moon-glow); }
+.btn:focus-visible { outline:2px solid var(--onyx); outline-offset:3px; }
+.on-night .btn:focus-visible { outline-color: var(--gold); }
 .btn[disabled], .btn[aria-disabled="true"] { opacity:.45; cursor:not-allowed; transform:none; }
 /* Secondary: a text link whose underline draws on hover */
 .link { color:var(--ink); background: linear-gradient(currentColor,currentColor) 0 100% / 100% 1px no-repeat;
   padding-bottom:2px; transition: background-size .35s var(--ease-out); }
 .link:hover { background-size: 0 1px; background-position: 100% 100%; }
-.link:focus-visible { outline:2px solid var(--deep-moon); outline-offset:4px; border-radius:2px; }
+.link:focus-visible { outline:2px solid var(--onyx); outline-offset:4px; border-radius:2px; }
 ```
 (The underline is a 1px rule, not a gradient effect; it is the only `linear-gradient` in the code.)
 
@@ -168,10 +186,10 @@ Five text steps (plus the footer mark, which is a brand graphic):
 .film-frame img { transition: transform .9s var(--ease-out); }
 .film:hover .film-frame img { transform: scale(1.04); }
 .film-play { position:absolute; left:1rem; bottom:1rem; width:56px; height:56px; border-radius:50%;
-  background:var(--moon-glow); color:var(--night); display:grid; place-items:center; transition: transform .3s var(--ease-out); }
+  background:var(--gold-light); color:var(--night); display:grid; place-items:center; transition: transform .3s var(--ease-out); }
 .film:hover .film-play { transform: scale(1.08); }
-.film:focus-visible { outline:2px solid var(--moon-glow); outline-offset:4px; }
-.film-meta { display:flex; justify-content:space-between; gap:1rem; margin-top:.75rem; font-size:.875rem; color:var(--moon-glow); }
+.film:focus-visible { outline:2px solid var(--gold); outline-offset:4px; }
+.film-meta { display:flex; justify-content:space-between; gap:1rem; margin-top:.75rem; font-size:.875rem; color:var(--gold-light); }
 ```
 
 ### Navigation (floating glass pill; the brief overrides taste's "no glass")
@@ -186,12 +204,12 @@ Five text steps (plus the footer mark, which is a brand graphic):
 .nav a { min-height:44px; display:inline-flex; align-items:center; padding:0 .875rem; border-radius:999px; color:var(--ink-soft); }
 .nav a:hover, .nav a[aria-current="true"] { color:var(--ink); }
 .nav-active { position:absolute; inset:0; border-radius:999px; background:var(--sand); z-index:-1; } /* Motion layoutId */
-.nav a:focus-visible { outline:2px solid var(--deep-moon); outline-offset:2px; }
+.nav a:focus-visible { outline:2px solid var(--onyx); outline-offset:2px; }
 ```
 
 ### Tags / badges
 ```css
-.tag-sample { display:inline-block; font:500 .8125rem/1.4 var(--font-sans); color:var(--champagne-ink);
+.tag-sample { display:inline-block; font:500 .8125rem/1.4 var(--font-sans); color:var(--gold-ink);
   background:var(--cream); padding:.25rem .625rem; border-radius:999px; } /* "Sample review · replace before launch" */
 ```
 
@@ -200,20 +218,20 @@ Five text steps (plus the footer mark, which is a brand graphic):
 .chip { min-height:44px; padding:0 1rem; border-radius:999px; background:rgb(var(--paper-rgb) / .7); color:var(--ink);
   font:500 .9375rem/1 var(--font-sans); transition: background-color .2s var(--ease-out), color .2s, transform .2s; }
 .chip:hover { background:var(--paper); }
-.chip[aria-pressed="true"] { background:var(--deep-moon); color:var(--paper); }
+.chip[aria-pressed="true"] { background:var(--onyx); color:var(--paper); }
 .chip:active { transform:scale(.97); }
-.chip:focus-visible { outline:2px solid var(--deep-moon); outline-offset:2px; }
+.chip:focus-visible { outline:2px solid var(--onyx); outline-offset:2px; }
 .chip:disabled { opacity:.45; cursor:not-allowed; }
 ```
 
-### Form fields (on the moon-glow coupon)
+### Form fields (on the parchment coupon)
 ```css
 .field label { display:block; font:500 .875rem/1.4 var(--font-sans); color:var(--ink); margin-bottom:.375rem; }
 .input { width:100%; min-height:52px; padding:0 1rem; border-radius:0; border:0; border-bottom:1px solid rgb(var(--ink-rgb) / .35);
   background:rgb(var(--paper-rgb) / .72); color:var(--ink); font:400 1rem/1.4 var(--font-sans); /* 16px: no iOS zoom */
   transition: background-color .2s var(--ease-out), border-color .2s; }
 .input:hover { background:rgb(var(--paper-rgb) / .9); }
-.input:focus-visible { outline:2px solid var(--deep-moon); outline-offset:2px; background:var(--paper); }
+.input:focus-visible { outline:2px solid var(--onyx); outline-offset:2px; background:var(--paper); }
 .input[aria-invalid="true"] { border-bottom:2px solid var(--error); }
 .field-error { color:var(--error); font-size:.875rem; margin-top:.375rem; }
 .input:disabled { opacity:.5; cursor:not-allowed; }
@@ -223,8 +241,8 @@ Five text steps (plus the footer mark, which is a brand graphic):
 ```css
 .faq summary { list-style:none; min-height:56px; display:flex; justify-content:space-between; align-items:center; gap:1rem; cursor:pointer; }
 .faq summary::-webkit-details-marker { display:none; }
-.faq summary:hover { color:var(--deep-moon); }
-.faq summary:focus-visible { outline:2px solid var(--deep-moon); outline-offset:4px; }
+.faq summary:hover { color:var(--gold-deep); }
+.faq summary:focus-visible { outline:2px solid var(--onyx); outline-offset:4px; }
 .faq details { interpolate-size: allow-keywords; }
 .faq details::details-content { block-size:0; overflow:clip; transition: block-size .45s var(--ease-out), content-visibility .45s allow-discrete; }
 .faq details[open]::details-content { block-size:auto; }
@@ -280,7 +298,7 @@ There are no shadows at rest and no glows.
 ### Base setup
 ```ts
 // motion/bootstrap.ts (loaded on idle)
-gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin, MotionPathPlugin);
+gsap.registerPlugin(ScrollTrigger); // no SplitText: it builds an Intl.Segmenter on load (50–140 ms on a mid-range phone)
 // Lenis via <ReactLenis root options={{ autoRaf:false, syncTouch:false, lerp:0.1 }} /> (desktop only)
 gsap.ticker.add((t) => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
 lenis.on('scroll', ScrollTrigger.update);
@@ -295,32 +313,32 @@ document.fonts.ready.then(() => ScrollTrigger.refresh());
 ```
 Hero order: the aperture scales 0.9→1 and the ring draws (0–0.9s), then H1 lines (0.15s, +0.1s each), sub (0.55s), CTAs (0.7s), scroll cue (0.9s). Everything ends by 1.6s. On a first visit the loader (0.9s) runs first, and the hero animations are delayed with `html[data-intro=play]`.
 
-### Scroll behaviour (one choreography for every section; triggered once at `top 85%`)
+### Scroll behaviour (one choreography for every section; each element once, as it crosses 92% of the screen)
 - Section label: fade + y 12px (0.6s).
-- H2: SplitText lines with `mask:'lines'`, `yPercent:110→0`, 0.9s expo.out, 0.08s stagger.
+- H2: split into masked lines as it arrives (one layout read finds the browser's own line breaks), `yPercent:140→0`, 0.9s expo.out, 0.08s stagger. The plain text comes back once the lines settle.
 - Body: fade + y 16px, 0.7s, 0.06s stagger.
 - Media: `clip-path: inset(0 0 100% 0) → inset(0)` 1.2s expo.out, with the inner image scaling 1.15→1; then a gentle scrubbed parallax (yPercent ±6).
-- Only elements still below the fold when the bootstrap runs are hidden and animated, so nothing can stay invisible. They are hidden with `opacity` alone (never `visibility`), so they stay in the tab order and the accessibility tree, and anything that receives focus is revealed at once.
+- One IntersectionObserver times every once-only reveal. Only elements wholly below the screen at its first report are hidden and animated, so nothing can stay invisible, and nothing already in view ever blinks. They are hidden with `opacity` alone (never `visibility`), so they stay in the tab order and the accessibility tree, and anything that receives focus is revealed at once.
 - Specials:
   - **Hero:** CSS sticky track (210svh); scrub drives the aperture circle to full-bleed, the media scales 1.15→1, and the headline drifts −12vh and fades.
   - **Manifesto:** words scrub opacity .16→1 while a faint background moon waxes.
   - **Marquee:** scroll-linked x.
-  - **Stories:** pinned horizontal track (desktop), a moon riding a MotionPath arc.
+  - **Stories:** pinned horizontal track (desktop), a moon riding a Bézier arc; on phones each arch opens as it is scrolled or swiped into view.
   - **Films:** the band's moon rises.
   - **Process:** the line draws and the phases wax.
-  - **About:** a DrawSVG swash.
+  - **About:** the swash draws with `stroke-dashoffset` (its `pathLength` is 1); the photo disc wipes up.
   - **Instagram:** tiles converge.
-  - **Footer:** mark letters rise.
+  - **Footer:** the phase moons wax in turn; the studio's logo settles in and its gold frame draws.
 
 ### Hover and focus states
-Every interactive element has hover, active, focus-visible and disabled states (§4). Hovers are 200ms colour or transform changes; focus rings are 2px deep-moon (moon-glow on night) with a 2–4px offset.
+Every interactive element has hover, active, focus-visible and disabled states (§4). Hovers are 200ms colour or transform changes; focus rings are 2px onyx (gold on night) with a 2–4px offset.
 
 ### Special effects
 - **Signature, "Index with preview" (Services):** hovering a row brings its image into one fixed moon frame (240ms crossfade + `circle()` reveal) and dims the other rows to ink-soft (never below 4.5:1). On touch, each row expands inline.
 - **Moon cursor:** fine pointers only; a dot plus a lerped ring that becomes "Play" over films and "View" over Instagram tiles; the native cursor in fields.
 - **Godavari ripple:** dropped (see §11). The hero reel is the moving picture.
 - **Akshata:** 14 rice grains burst from "Send on WhatsApp".
-- **Nav moon:** waxes with scroll and turns blue at Contact.
+- **Nav moon:** waxes with scroll and turns full deep gold, with a soft glow, at Contact.
 
 ### Reduced motion
 ```css
@@ -345,7 +363,7 @@ With reduced motion there is no Lenis, loader, scrub, pin, parallax, marquee mot
 ### Don't
 - ❌ Never caption an AI image with a real couple's name, and never AI-generate Dhiraj or any real person.
 - ❌ No invented awards, press, wedding counts, ratings, prices or reviews presented as real.
-- ❌ No gradients, glows or drop shadows at rest (exceptions: the nav pill and its moon's blue glow at Contact, the menu sheet, the floating WhatsApp button, the dialog, the neutral scrim over the phone hero photo, and brand logos).
+- ❌ No gradients, glows or drop shadows at rest (exceptions: the nav pill and its moon's gold glow at Contact, the menu sheet, the floating WhatsApp button, the dialog, the neutral scrim over the phone hero photo, and brand logos).
 - ❌ No card grids, icon-topped feature cards, pill badges or eyebrow chips (except the Marathi line and the moon-phase section labels).
 - ❌ No monospace, no tiny tracked uppercase labels, no single italic accent word in a headline.
 - ❌ No `filter: blur()` on moving elements; `backdrop-filter` ≤ 14px and only on the nav.
@@ -399,7 +417,7 @@ html { overflow-x: clip; } /* keeps position: sticky working */
 | about | Inset panel, shaped portrait | ✓ on cream (not deep) | The brief allows one dark band only |
 | testimonial | Portrait and offset quotation | **Redraw → paper slips** with scalloped edges | No speaker portraits exist; reviews are samples |
 | showcase | Object on a disc | Six circular Instagram tiles | Brief: 6-tile grid |
-| contact | Clip-out coupon | ✓ moon-glow coupon with circular notches; stub = twilight photo with the live moon | An RSVP card, so the page-is-the-object direction |
+| contact | Clip-out coupon | ✓ parchment coupon with circular notches; stub = twilight photo with the live moon | An RSVP card, so the page-is-the-object direction |
 | footer | The mark, built large | Giant serif wordmark with the "O" as a full moon + a row of phases | Brief: giant wordmark |
 | motion | Index with preview | ✓ Services | — |
 
@@ -421,7 +439,7 @@ html { overflow-x: clip; } /* keeps position: sticky working */
 - **The Marathi webfont is switched on near its two touches** (`html.marathi-ready`, set by an IntersectionObserver in the head script), so its 61 KB never loads with the first screen. Spaces stay outside the Marathi spans, or the font's Latin file would load too.
 - **CSS is inlined** (`experimental.inlineCss`). Next also copies it into the RSC payload; Vercel's brotli dedupes that (about 1.4 KB). Blur placeholders are not inlined: the dominant colour is enough.
 - **Hero reel budgets** (desktop ≤ 4 MB, phone ≤ 2.5 MB) are enforced at build time. Phones never fall back to the desktop reel. The supplied reel's generator mark is cropped out with `REEL_CROP`.
-- **Coupon text in full ink** on moon-glow (ink-soft measured 4.44:1 there).
+- **Coupon text in full ink** on the parchment card.
 - **Trust line:** pills under 64rem, discs above.
 - **Lenis anchor scrolling uses no offset**, because Lenis honours the root's `scroll-padding-top` (and any `scroll-margin-top`).
 - **First-visit intro trimmed to 0.9s** (it held Speed Index back at 1.2s).
@@ -435,8 +453,19 @@ html { overflow-x: clip; } /* keeps position: sticky working */
   - the menu sheet scrolls, so every link stays reachable
 - **Scrollbar (client request): a pill of evening sky.**
   - The gradient runs sunset coral → rose → lilac → moon → deep moon (`--color-sky-*` tokens, each ≥ 3:1 on paper), in a paper rim on a paper track.
-  - It renders in Chromium and WebKit; Firefox shows a solid moon-blue thumb, and phones keep their overlay scrollbars.
+  - It renders in Chromium and WebKit; Firefox shows a solid deep-gold thumb, and phones keep their overlay scrollbars. (Since the re-theme, the thumb is zari gold deepening to onyx.)
   - `scrollbar-gutter: stable` stops the page jumping sideways when the dialog or menu locks scrolling.
   - A thumb that changed colour with scroll position was dropped: Chromium clipped the mask around it and won't repaint the thumb on class changes.
+- **Re-theme to "Onyx & Zari Gold" and the client's own logo (2026-10-21):** see §1–§2. The navy action colour became onyx, moon-blue fills became gold, the coupon became parchment, and the Films band is black with a pale-gold moon.
+- **Motion on phones and tablets (bug fixed 2026-10-21):**
+  - GSAP's `matchMedia` ran its setup only while "desktop" or "reduce" matched, so screens under 1024px never got scroll motion at all. It now keys on `prefers-reduced-motion: no-preference`.
+  - The phone story arches are observed through their unclipped wrapper: an element hidden by `clip-path: inset(100%)` has no visible area, so observing it never fired.
+  - A light scroll scrub now leans the phone hero in as it leaves.
+- **Motion cost on phones (2026-10-21).** Turning motion on for phones first cost about 300 ms of main-thread time on a 4×-throttled phone. Now:
+  - **One IntersectionObserver for every once-only reveal**, instead of a ScrollTrigger each (each one measured the page). Waiting elements are hidden with plain style writes (no reads), and offsets, scale and scatter start only when they arrive, while still invisible.
+  - **No SplitText or DrawSVG.** SplitText builds an `Intl.Segmenter` the moment it loads (47–136 ms measured). The manifesto's words are split on the server; headings are split into lines on arrival and restored after, matching the browser's line breaks to 0 px (`qa/split-fidelity.mjs`); the swash uses `stroke-dashoffset`.
+  - **Setup in slices** that yield between sections.
+  - The GSAP chunk's evaluation dropped from about 310 ms to 140 ms, and the observer's hide pass from about 120 ms to 6 ms (4× CPU). With Lighthouse's CPU multiplier calibrated to this machine, TBT is the same with and without the motion code.
+  - Cards in a sideways swipe row (`data-swipe-row`) arrive with their row, and the About photo is wrapped so the observer watches the unclipped circle.
 - **Audits (2026-10-21).** The web-design checklist passes, with two noted deviations: the display serif is 400 (Instrument Serif's only weight), and there is no WebGL moment (three of the four scroll-story patterns are covered without it). The ui-ux-pro-max pre-delivery items that apply to the web pass; light-only by brief, so the dark-mode rows don't apply.
 - **Taste inspector.** It runs with allowances for what the brief asks for: numbered lunar labels and label/value pairs, structural hairlines, the glass pill, the cream palette, the italic hero line, animated one-colour link underlines, the moon-phase process steps, the snap rows and the pinned stories. The manifesto and H3 are capped at 36px. Every kept pattern carries a `taste-skill-ignore` reason in the CSS.

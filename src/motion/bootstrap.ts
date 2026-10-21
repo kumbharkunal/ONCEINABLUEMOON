@@ -1,82 +1,281 @@
 // Scroll choreography (loaded on idle by MotionBootstrap, only when prefers-reduced-motion: no-preference).
 // The server already rendered the final, visible page. This module only hides elements that are still
 // below the fold, then reveals them as they arrive, so nothing can stay hidden if anything fails.
-// ScrollTriggers are created section by section in page order (pins refresh correctly).
+//
+// Cost on a phone matters as much as the look (a mid-range Android is about 4× slower than a laptop):
+// - Every once-only reveal shares one IntersectionObserver. The browser reports positions after its own
+//   layout, and hiding is a plain style write, so the setup never forces a layout of its own.
+// - ScrollTrigger is kept for what follows the scroll continuously: the hero, the manifesto, the marquee,
+//   the stories pin, the films moon and the About swash. Those are created section by section in page
+//   order, so the pin refreshes correctly.
+// - The setup runs in short slices that hand the main thread back between sections.
+// - No SplitText: it builds an Intl.Segmenter as it loads (50–140 ms on such a phone). The manifesto's
+//   words are split on the server, and headings are split into lines here, only as they arrive.
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { moonLitPath } from '@/lib/moon-path';
 
-gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
+gsap.registerPlugin(ScrollTrigger);
 
 const EXPO = 'expo.out';
 const qa = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => Array.from(root.querySelectorAll<T>(sel));
-const isBelowFold = (el: Element) => el.getBoundingClientRect().top > window.innerHeight * 0.9;
+const byPageOrder = (a: Element, b: Element) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
+const firstImages = (els: HTMLElement[]) => els.map((el) => el.querySelector('img')).filter((img): img is HTMLImageElement => img !== null);
 
-/* ───────────── Generic reveals (one choreography for every section) ───────────── */
+/* ───────────── Headings, line by line ───────────── */
 
-function revealLines(el: HTMLElement) {
-  if (!isBelowFold(el)) return;
-  gsap.set(el, { opacity: 0 });
-  ScrollTrigger.create({
-    trigger: el,
-    start: 'top 88%',
-    once: true,
-    onEnter: () => {
-      SplitText.create(el, {
-        type: 'lines',
-        mask: 'lines',
-        tag: 'span',
-        linesClass: 'split-line',
-        autoSplit: true,
-        onSplit(self) {
-          gsap.set(el, { opacity: 1 });
-          return gsap.from(self.lines, { yPercent: 110, duration: 0.9, ease: EXPO, stagger: 0.08 });
-        },
-      });
-    },
-  });
-}
-
-function revealBatch(els: HTMLElement[], from: gsap.TweenVars, to: gsap.TweenVars, stagger = 0.07) {
-  const hidden = els.filter(isBelowFold);
-  if (!hidden.length) return;
-  gsap.set(hidden, from);
-  ScrollTrigger.batch(hidden, {
-    start: 'top 90%',
-    once: true,
-    interval: 0.12,
-    onEnter: (batch) => gsap.to(batch, { ...to, stagger, overwrite: true }),
-  });
-}
-
-function revealMedia(frames: HTMLElement[]) {
-  for (const frame of frames) {
-    if (!isBelowFold(frame)) continue;
-    const img = frame.querySelector('img');
-    gsap.set(frame, { clipPath: 'inset(100% 0% 0% 0%)' });
-    if (img) gsap.set(img, { scale: 1.15 });
-    ScrollTrigger.create({
-      trigger: frame,
-      start: 'top 88%',
-      once: true,
-      onEnter: () => {
-        gsap.to(frame, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: EXPO });
-        if (img) gsap.to(img, { scale: 1, duration: 1.4, ease: EXPO });
-      },
+/**
+ * Splits a plain-text heading into lines that can rise through masks: one layout read to find where
+ * the browser broke the lines, then each line goes in its own clip (sections.css .split-mask).
+ * Returns the lines and a function that puts the original text back.
+ */
+function splitLines(el: HTMLElement) {
+  const text = el.textContent ?? '';
+  el.textContent = '';
+  const words = text
+    .trim()
+    .split(/\s+/)
+    .map((word) => {
+      const span = document.createElement('span');
+      span.textContent = word;
+      el.append(span, ' ');
+      return span;
     });
+  const rows: string[][] = [];
+  let top = Number.NaN;
+  for (const span of words) {
+    const t = span.offsetTop;
+    if (t !== top) rows.push([]);
+    top = t;
+    rows[rows.length - 1].push(span.textContent ?? '');
   }
+  el.textContent = '';
+  const lines = rows.map((row) => {
+    const mask = document.createElement('span');
+    const line = document.createElement('span');
+    mask.className = 'split-mask';
+    line.className = 'split-line';
+    line.textContent = row.join(' ');
+    mask.append(line);
+    el.append(mask);
+    return line;
+  });
+  return { lines, restore: () => void (el.textContent = text) };
 }
 
-function reveals(scope: ParentNode) {
-  qa('[data-reveal="lines"]', scope).forEach(revealLines);
-  revealBatch(qa('[data-reveal="label"]', scope), { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' });
-  revealBatch(qa('[data-reveal="fade"]', scope), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.06);
-  revealBatch(qa('[data-reveal="rise"]', scope), { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.9, ease: EXPO }, 0.08);
-  revealBatch(qa('[data-reveal="pop"]', scope), { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.9, ease: EXPO }, 0.07);
-  revealBatch(qa('[data-reveal="slip"]', scope), { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 1.1, ease: EXPO }, 0.12);
-  revealMedia(qa('[data-reveal="media"], [data-reveal-media]', scope));
+/* ───────────── Once-only reveals: one observer for the whole page ───────────── */
+
+/** Writes an inline style and remembers the original, so leaving motion (or a breakpoint change) restores it exactly. */
+type SetStyle = (el: HTMLElement | SVGElement, prop: string, value: string) => void;
+
+/**
+ * How a kind of element waits below the fold, and how it arrives. Waiting is a plain style write (no
+ * reads); everything the arrival needs (offsets, scale, scatter) starts while the element is still
+ * invisible. Elements that cross in the same frame arrive together, in page order.
+ */
+type Kind = {
+  hide: (els: HTMLElement[], set: SetStyle) => void;
+  show: (els: HTMLElement[]) => (() => void) | void;
+};
+
+const batch = (from: gsap.TweenVars, to: gsap.TweenVars, stagger = 0.07): Kind => ({
+  hide: (els, set) => els.forEach((el) => set(el, 'opacity', '0')),
+  show: (els) => void gsap.fromTo(els, { opacity: 0, ...from }, { opacity: 1, ...to, stagger, overwrite: true }),
+});
+
+const KINDS = {
+  label: batch({ y: 12 }, { y: 0, duration: 0.6, ease: 'power3.out' }),
+  fade: batch({ y: 16 }, { y: 0, duration: 0.7, ease: 'power3.out' }, 0.06),
+  rise: batch({ y: 32 }, { y: 0, duration: 0.9, ease: EXPO }, 0.08),
+  pop: batch({ scale: 0.9 }, { scale: 1, duration: 0.9, ease: EXPO }, 0.07),
+  slip: batch({ y: 80 }, { y: 0, duration: 1.1, ease: EXPO }, 0.12),
+  phase: batch({ scale: 0.6 }, { scale: 1, duration: 0.6, ease: EXPO }, 0.06),
+
+  // Headings rise line by line through masks. They are split only when they arrive (in their final font
+  // and width), and the plain text comes back once the lines have settled.
+  lines: {
+    hide: (els, set) => els.forEach((el) => set(el, 'opacity', '0')),
+    show: (els) => {
+      const restores = els.map((el) => {
+        const { lines, restore } = splitLines(el);
+        el.style.opacity = '';
+        gsap.fromTo(lines, { yPercent: 140 }, { yPercent: 0, duration: 0.9, ease: EXPO, stagger: 0.08, onComplete: restore });
+        return restore;
+      });
+      return () => restores.forEach((restore) => restore());
+    },
+  },
+
+  // Photographs open from the bottom edge while the picture settles.
+  media: {
+    hide: (els, set) => els.forEach((el) => set(el, 'clip-path', 'inset(100% 0% 0% 0%)')),
+    show: (els) => {
+      gsap.fromTo(els, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: EXPO, stagger: 0.08 });
+      gsap.fromTo(firstImages(els), { scale: 1.15 }, { scale: 1, duration: 1.4, ease: EXPO, stagger: 0.08 });
+    },
+  },
+
+  // Story arches on phones: a CSS transition (sections.css .will-reveal) does the opening.
+  arch: {
+    hide: (els) => els.forEach((f) => f.classList.add('will-reveal')),
+    show: (els) => els.forEach((f) => f.classList.add('is-in')),
+  },
+
+  // Six Instagram moons converge into the grid.
+  converge: {
+    hide: (grids, set) => grids.flatMap((g) => qa('.ig-tile', g)).forEach((t) => set(t, 'opacity', '0')),
+    show: (grids) =>
+      void gsap.fromTo(
+        grids.flatMap((g) => qa('.ig-tile', g)),
+        {
+          opacity: 0,
+          x: () => gsap.utils.random(-48, 48),
+          y: () => gsap.utils.random(-40, 56),
+          rotation: () => gsap.utils.random(-7, 7),
+          scale: 0.86,
+        },
+        { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: 1.2, ease: EXPO, stagger: 0.06 },
+      ),
+  },
+
+  // The studio's logo settles in and its gold frame draws (the frame's pathLength is 1).
+  logo: {
+    hide: (els, set) =>
+      els.forEach((el) => {
+        set(el, 'opacity', '0');
+        qa<SVGPathElement>('[data-logo-frame]', el).forEach((f) => set(f, 'stroke-dashoffset', '1'));
+      }),
+    show: (els) => {
+      gsap.fromTo(els, { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 1, ease: EXPO });
+      const frames = els.flatMap((el) => qa<SVGPathElement>('[data-logo-frame]', el));
+      gsap.fromTo(frames, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut', delay: 0.15 });
+    },
+  },
+} satisfies Record<string, Kind>;
+
+type Watch = { kind: Kind; target: HTMLElement };
+
+const add = (into: Map<Kind, HTMLElement[]>, { kind, target }: Watch) => into.set(kind, [...(into.get(kind) ?? []), target]);
+
+/**
+ * One IntersectionObserver for every once-only reveal. Its first report on an element says where it is:
+ * wholly below the screen, it is hidden and waits; anywhere else (on screen, above, or not rendered) it
+ * is left exactly as the server drew it, so nothing the visitor can already see ever blinks. A later
+ * report that it crossed into view (8% above the bottom edge) reveals it, once.
+ */
+function createRevealer(ctx: gsap.Context, alive: () => boolean) {
+  const watching = new Map<Element, Watch[]>();
+  const placed = new WeakSet<Element>();
+  const hidden = new WeakSet<Element>();
+  const originals = new Map<HTMLElement | SVGElement, Map<string, string>>();
+
+  const set: SetStyle = (el, prop, value) => {
+    let props = originals.get(el);
+    if (!props) originals.set(el, (props = new Map()));
+    if (!props.has(prop)) props.set(prop, el.style.getPropertyValue(prop));
+    el.style.setProperty(prop, value);
+  };
+
+  const play = (hide: Map<Kind, HTMLElement[]>, show: Map<Kind, HTMLElement[]>) => {
+    if (!hide.size && !show.size) return;
+    hide.forEach((els, kind) => kind.hide(els, set));
+    if (!show.size) return;
+    // Inside the GSAP context, so leaving motion reverts the tweens; a kind's own cleanup runs after.
+    ctx.add(() => {
+      const cleanups: Array<() => void> = [];
+      show.forEach((els, kind) => {
+        const cleanup = kind.show(els.sort(byPageOrder));
+        if (cleanup) cleanups.push(cleanup);
+      });
+      return () => cleanups.forEach((c) => c());
+    });
+  };
+
+  const forget = (observed: Element) => {
+    watching.delete(observed);
+    io.unobserve(observed);
+  };
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (!alive()) return;
+      const screen = window.innerHeight;
+      const hide = new Map<Kind, HTMLElement[]>();
+      const show = new Map<Kind, HTMLElement[]>();
+      for (const e of entries) {
+        const list = watching.get(e.target);
+        if (!list) continue;
+        const first = !placed.has(e.target);
+        placed.add(e.target);
+        if (first && !e.isIntersecting && e.boundingClientRect.top >= screen) {
+          for (const w of list) {
+            hidden.add(w.target);
+            add(hide, w);
+          }
+          continue;
+        }
+        if (!first && !e.isIntersecting) continue;
+        forget(e.target);
+        if (!first) list.forEach((w) => add(show, w));
+      }
+      play(hide, show);
+    },
+    { rootMargin: '0px 0px -8% 0px' },
+  );
+
+  return {
+    /** Reveal `target` when `observed` arrives. Observe an unclipped wrapper for anything hidden by clip-path (a fully clipped box is never reported as visible). */
+    watch(kind: Kind, target: HTMLElement, observed: Element = target) {
+      const list = watching.get(observed);
+      if (list) list.push({ kind, target });
+      else {
+        watching.set(observed, [{ kind, target }]);
+        io.observe(observed);
+      }
+    },
+    /** Keyboard focus got ahead of the scroll: reveal everything around the focused element now. */
+    settle(node: Element) {
+      const show = new Map<Kind, HTMLElement[]>();
+      for (const [observed, list] of watching) {
+        const rest = list.filter((w) => {
+          if (!w.target.contains(node) && !node.contains(w.target)) return true;
+          if (hidden.has(w.target)) add(show, w);
+          return false;
+        });
+        if (rest.length === list.length) continue;
+        if (rest.length) watching.set(observed, rest);
+        else forget(observed);
+      }
+      play(new Map(), show);
+    },
+    /** Stops watching and puts back every style the waiting elements were given. */
+    disconnect() {
+      io.disconnect();
+      originals.forEach((props, el) => props.forEach((value, prop) => (value ? el.style.setProperty(prop, value) : el.style.removeProperty(prop))));
+      originals.clear();
+    },
+  };
+}
+
+type Revealer = ReturnType<typeof createRevealer>;
+
+/**
+ * Cards in a row that swipes sideways arrive with the row: the observer can't see a card waiting off to
+ * the side, and a card rising as you swipe across would read wrong. (Where the row is a plain grid, as on
+ * wider screens, each card keeps its own timing.)
+ */
+function swipeRow(el: Element) {
+  const row = el.closest('[data-swipe-row]');
+  return row && getComputedStyle(row).overflowX !== 'visible' ? row : null;
+}
+
+function reveals(scope: ParentNode, r: Revealer) {
+  const kinds = ['label', 'fade', 'rise', 'pop', 'slip', 'lines'] as const;
+  for (const name of kinds) qa(`[data-reveal="${name}"]`, scope).forEach((el) => r.watch(KINDS[name], el, swipeRow(el) ?? el));
+  // A frame is clipped while it waits, so its parent is what the observer watches.
+  for (const frame of qa('[data-reveal="media"], [data-reveal-media]', scope)) {
+    r.watch(KINDS.media, frame, swipeRow(frame) ?? frame.parentElement ?? frame);
+  }
 }
 
 /* ───────────── Hero: the moon aperture opens to full bleed (desktop) ───────────── */
@@ -155,23 +354,32 @@ function heroTimeline(els: {
   render();
 }
 
+/* ───────────── Hero on phones and tablets: the photo leans in as the first screen leaves ───────────── */
+
+function heroCompact(section: HTMLElement) {
+  // [data-hero-scroll] and the copy wrapper carry no CSS animation of their own (the entrance animates
+  // their parents/children), so scrubbing them never fights the CSS.
+  const scroller = section.querySelector<HTMLElement>('[data-hero-scroll]');
+  const copy = section.querySelector<HTMLElement>('[data-hero-copy]');
+  if (!scroller || !copy) return;
+  gsap
+    .timeline({ scrollTrigger: { trigger: section, start: 'top top', end: 'bottom top', scrub: 0.5 } })
+    .to(scroller, { scale: 1.1, yPercent: 5, ease: 'none' }, 0)
+    .to(copy, { y: -48, opacity: 0, ease: 'power1.in' }, 0);
+}
+
 /* ───────────── Manifesto: lit word by word over a waxing moon ───────────── */
 
 function manifesto(section: HTMLElement) {
   const text = section.querySelector<HTMLElement>('[data-manifesto-text]');
   const lit = section.querySelector<SVGPathElement>('[data-manifesto-moon-lit]');
   if (text) {
-    const split = SplitText.create(text, { type: 'words', tag: 'span', aria: 'none', ignore: '.manifesto-dot', wordsClass: 'mw' });
-    const units = [...split.words, ...qa('.manifesto-dot', text)].sort((a, b) =>
-      a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
+    // The words (.mw) were split on the server; the three photo moons light in their places.
+    gsap.fromTo(
+      qa('.mw, .manifesto-dot', text),
+      { opacity: 0.16 },
+      { opacity: 1, ease: 'none', stagger: 0.12, scrollTrigger: { trigger: text, start: 'top 78%', end: 'bottom 48%', scrub: 0.5 } },
     );
-    gsap.set(units, { opacity: 0.16 });
-    gsap.to(units, {
-      opacity: 1,
-      ease: 'none',
-      stagger: 0.12,
-      scrollTrigger: { trigger: text, start: 'top 78%', end: 'bottom 48%', scrub: 0.5 },
-    });
   }
   if (lit) {
     const moon = { p: 0.04 };
@@ -262,24 +470,9 @@ function storiesDesktop(section: HTMLElement) {
   return () => document.documentElement.classList.remove('stories-pinned');
 }
 
-function storiesMobile(section: HTMLElement) {
-  const viewport = section.querySelector<HTMLElement>('[data-stories-viewport]');
-  if (!viewport) return;
-  const frames = qa('[data-story-frame]', section);
-  frames.forEach((f) => f.classList.add('will-reveal'));
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) {
-        if (e.isIntersecting) {
-          e.target.classList.add('is-in');
-          io.unobserve(e.target);
-        }
-      }
-    },
-    { root: viewport, threshold: 0.25 },
-  );
-  frames.forEach((f) => io.observe(f));
-  return () => io.disconnect();
+/** Phones: the chapters are a swipe row. Each arch opens when it is really in sight, scrolled down to or swiped across (the observer's screen is clipped by the row). */
+function storiesMobile(section: HTMLElement, r: Revealer) {
+  for (const frame of qa('[data-story-frame]', section)) r.watch(KINDS.arch, frame, frame.parentElement ?? frame);
 }
 
 /* ───────────── Films: the band's moon rises ───────────── */
@@ -297,12 +490,13 @@ function films(section: HTMLElement) {
 /* ───────────── About: the swash draws under his name; the circle drifts ───────────── */
 
 function about(section: HTMLElement) {
+  // The swash's pathLength is 1, so a dash of 1 is the whole stroke.
   const swash = section.querySelector<SVGPathElement>('[data-about-swash]');
   if (swash) {
     gsap.fromTo(
       swash,
-      { drawSVG: '0%' },
-      { drawSVG: '100%', ease: 'none', scrollTrigger: { trigger: swash, start: 'top 88%', end: 'top 50%', scrub: 0.6 } },
+      { strokeDasharray: 1, strokeDashoffset: 1 },
+      { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: swash, start: 'top 88%', end: 'top 50%', scrub: 0.6 } },
     );
   }
   const circle = section.querySelector('.about-circle img');
@@ -315,113 +509,101 @@ function about(section: HTMLElement) {
   }
 }
 
-/* ───────────── Instagram: six moons converge into the grid ───────────── */
+/* ───────────── Footer: the moons wax in turn; the studio's logo settles in and its frame draws ───────────── */
 
-function instagram(section: HTMLElement) {
-  const grid = section.querySelector<HTMLElement>('[data-ig-grid]');
-  if (!grid || !isBelowFold(grid)) return;
-  const tiles = qa('.ig-tile', grid);
-  gsap.set(tiles, {
-    opacity: 0,
-    x: () => gsap.utils.random(-48, 48),
-    y: () => gsap.utils.random(-40, 56),
-    rotation: () => gsap.utils.random(-7, 7),
-    scale: 0.86,
-  });
-  ScrollTrigger.create({
-    trigger: grid,
-    start: 'top 85%',
-    once: true,
-    onEnter: () => gsap.to(tiles, { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: 1.2, ease: EXPO, stagger: 0.06 }),
-  });
+function footer(r: Revealer) {
+  qa('[data-footer-phases] li').forEach((li) => r.watch(KINDS.phase, li));
+  const brand = document.querySelector<HTMLElement>('[data-footer-brand]');
+  if (brand) r.watch(KINDS.logo, brand);
 }
 
-/* ───────────── Footer: the name rises; its "O" waxes into the blue moon ───────────── */
+/* ───────────── Setup in slices ───────────── */
 
-function footer() {
-  const mark = document.querySelector<HTMLElement>('[data-footer-mark]');
-  const lit = document.querySelector<SVGPathElement>('[data-footer-o-lit]');
-  if (!mark) return;
-  const lines = qa('.footer-mark-line', mark);
-  if (isBelowFold(mark)) {
-    lines.forEach((l) => l.classList.add('is-masked'));
-    const inner = lines.map((l) => {
-      const span = document.createElement('span');
-      span.className = 'footer-mark-inner';
-      while (l.firstChild) span.appendChild(l.firstChild);
-      l.appendChild(span);
-      return span;
-    });
-    gsap.set(inner, { yPercent: 105 });
-    ScrollTrigger.create({
-      trigger: mark,
-      start: 'top 90%',
-      once: true,
-      onEnter: () => gsap.to(inner, { yPercent: 0, duration: 1.1, ease: EXPO, stagger: 0.1 }),
-    });
-  }
-  if (lit) {
-    const moon = { p: 0.06 };
-    lit.setAttribute('d', moonLitPath(moon.p, 10.2, 12, 12));
-    gsap.to(moon, {
-      p: 0.5,
-      ease: 'none',
-      scrollTrigger: { trigger: mark, start: 'top bottom', end: 'bottom bottom', scrub: 0.6 },
-      onUpdate: () => lit.setAttribute('d', moonLitPath(moon.p, 10.2, 12, 12)),
-    });
-  }
+/** Runs the steps in page order, handing the main thread back whenever a slice has used ~8 ms. */
+function runInSlices(steps: Array<() => void>, ctx: gsap.Context, alive: () => boolean) {
+  let i = 0;
+  const slice = () => {
+    if (!alive()) return;
+    const until = performance.now() + 8;
+    while (i < steps.length) {
+      ctx.add(steps[i++]);
+      if (performance.now() > until) break;
+    }
+    if (i < steps.length) window.setTimeout(slice, 0);
+  };
+  window.setTimeout(slice, 0);
 }
 
 /* ───────────── Init ───────────── */
 
 export function init(): () => void {
   const mm = gsap.matchMedia();
+  let revealer: Revealer | undefined;
+  // GSAP runs this only while at least one condition matches, so one of them must hold on every screen
+  // where motion is allowed (keying on "desktop" alone silently skipped every phone and tablet).
   mm.add(
-    { desktop: '(min-width: 64rem)', reduce: '(prefers-reduced-motion: reduce)' },
+    { desktop: '(min-width: 64rem)', motion: '(prefers-reduced-motion: no-preference)' },
     (ctx) => {
-      const { desktop, reduce } = ctx.conditions as { desktop: boolean; reduce: boolean };
-      if (reduce) return;
+      const { desktop, motion } = ctx.conditions as { desktop: boolean; motion: boolean };
+      if (!motion) return;
       document.documentElement.classList.add('motion-ready');
-      const cleanups: Array<(() => void) | undefined> = [];
       let alive = true;
+      const isAlive = () => alive;
+      const r = createRevealer(ctx, isAlive);
+      revealer = r;
+      const cleanups: Array<() => void> = [];
 
-      // Page order: hero → sections → footer.
-      const sections = qa<HTMLElement>('main > section, main > .marquee');
-      for (const section of sections) {
+      // One step per section, in page order: hero → sections → footer.
+      const steps: Array<() => void> = [];
+      for (const section of qa<HTMLElement>('main > section, main > .marquee')) {
         if (section.id === 'top') {
-          if (desktop) void hero(section, ctx, () => alive);
+          steps.push(() => (desktop ? void hero(section, ctx, isAlive) : heroCompact(section)));
           continue;
         }
         if (section.classList.contains('marquee')) {
-          marquee(section);
+          steps.push(() => marquee(section));
           continue;
         }
-        if (section.id === 'idea') manifesto(section);
-        if (section.id === 'stories') cleanups.push(desktop ? storiesDesktop(section) : storiesMobile(section));
-        if (section.id === 'films') films(section);
-        if (section.id === 'about') about(section);
-        if (section.id === 'instagram') instagram(section);
-        reveals(section);
+        steps.push(() => {
+          if (section.id === 'idea') manifesto(section);
+          if (section.id === 'stories') {
+            if (desktop) cleanups.push(storiesDesktop(section));
+            else storiesMobile(section, r);
+          }
+          if (section.id === 'films') films(section);
+          if (section.id === 'about') about(section);
+          if (section.id === 'instagram') {
+            const grid = section.querySelector<HTMLElement>('[data-ig-grid]');
+            if (grid) r.watch(KINDS.converge, grid);
+          }
+          reveals(section, r);
+        });
       }
-      footer();
+      steps.push(() => footer(r));
+      runInSlices(steps, ctx, isAlive);
 
       return () => {
         alive = false;
-        cleanups.forEach((c) => c?.());
+        r.disconnect();
+        if (revealer === r) revealer = undefined;
+        cleanups.forEach((c) => c());
+        // The arches' classes are ours to remove (GSAP reverts only its own styles).
+        qa('.will-reveal').forEach((f) => f.classList.remove('will-reveal', 'is-in'));
         document.documentElement.classList.remove('motion-ready');
       };
     },
   );
 
-  // Keyboard users may tab ahead of the scroll: anything focused is revealed at once.
+  // Keyboard users may tab ahead of the scroll: anything around the focused element is revealed at once.
   const onFocus = (e: FocusEvent) => {
-    const el = (e.target as Element | null)?.closest<HTMLElement>('[data-reveal], [data-reveal-media], .ig-tile');
-    if (el && Number(getComputedStyle(el).opacity) < 1) gsap.to(el, { opacity: 1, y: 0, x: 0, scale: 1, rotation: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.3, overwrite: true });
+    if (e.target instanceof Element) revealer?.settle(e.target);
   };
   document.addEventListener('focusin', onFocus);
 
+  // Webfonts can change line lengths and so trigger positions. Refresh once they have all arrived
+  // (usually they already have by now, and then there's nothing to do).
   const refresh = () => ScrollTrigger.refresh();
-  document.fonts?.ready.then(refresh).catch(() => undefined);
+  if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(refresh).catch(() => undefined);
   if (document.readyState !== 'complete') window.addEventListener('load', refresh, { once: true });
 
   return () => {

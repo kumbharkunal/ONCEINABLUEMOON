@@ -20,7 +20,7 @@ export function Instagram() {
       <div className="page grid-page gap-y-12">
         <div className="col-span-4 lg:col-span-4">
           <SectionLabel n={9}>Instagram</SectionLabel>
-          <h2 id="ig-title" className="mt-5 flex flex-wrap items-center gap-x-3 font-display text-h3" data-reveal="lines">
+          <h2 id="ig-title" className="mt-5 flex flex-wrap items-center gap-x-3 font-display text-h3" data-reveal="fade">
             <InstagramLogo className="size-[0.9em]" />
             <span>@{site.socials.instagramHandle}</span>
           </h2>

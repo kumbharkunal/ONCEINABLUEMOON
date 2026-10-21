@@ -45,6 +45,16 @@ Resume file. If a session stops, read this, then the approved plan
   - web-design checklist, ui-ux-pro-max pre-delivery, taste lint/inspect
   - fixes from them: Phosphor icons wired in, a hero reel pause control, focus-safe `scroll-padding`, a process-panel hover, the 404 button at content width, and landscape fixes (hero track min-height, scrollable menu sheet)
 
+- 2026-10-21 · Client feedback:
+  - The navy theme was disliked. The site was re-themed to "Onyx & Zari Gold", drawn from the studio's own logo, which Kunal shared from their Instagram.
+  - The logo is redrawn as SVG and used in the nav, the footer and the intro.
+  - Mobile animations didn't work: GSAP's `matchMedia` skipped every screen under 1024px. Fixed, along with the phone story-arch reveal, which never fired; the phone hero also gained a scroll scrub.
+  - Instagram facts from the screenshot (2026-10-21): 8,319 followers, 110 posts, "Mumbai | Nashik", "Destination wedding storytellers creating documentary driven films across India and beyond". They are not on the page yet.
+- 2026-10-21 · Motion cost on phones:
+  - Turning motion on for phones raised TBT, so the setup was rebuilt: one IntersectionObserver for every once-only reveal, no SplitText or DrawSVG, and the setup in slices (details in DESIGN.md §11).
+  - Measured with LoAF attribution (`qa/mobile-loaf.mjs`) and a CPU profile (`qa/mobile-profile.mjs`).
+  - Local Lighthouse this afternoon is not comparable with the morning: the laptop is on battery and its benchmark index fell from about 3,800 to about 1,050. Runs use `--throttling.cpuSlowdownMultiplier=1.15` to compensate, which gives TBT 35–62 ms with motion and 53–66 ms with the motion code blocked.
+
 ## Next step
 
 Done for the pitch. Remaining items are Kunal's:

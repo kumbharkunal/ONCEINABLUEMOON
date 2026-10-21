@@ -19,7 +19,7 @@ export function Contact() {
         <div className="max-w-[46rem]">
           <SectionLabel n={10}>Contact</SectionLabel>
           {/* The space stays outside the Marathi spans: a space would also pull in the font's 20 KB Latin file. */}
-          <p className="mt-6 text-h3 text-champagne-ink" lang="mr" data-reveal="fade">
+          <p className="mt-6 text-h3 text-gold-ink" lang="mr" data-reveal="fade">
             <span className="font-marathi">शुभमंगल</span> <span className="font-marathi">सावधान</span>
           </p>
           <h2 id="contact-title" className="mt-2 text-h2" data-reveal="lines">

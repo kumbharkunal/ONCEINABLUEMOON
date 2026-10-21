@@ -10,7 +10,7 @@ export function Faq() {
     <section id="faq" aria-labelledby="faq-title" className="faq pb-[var(--section-y)]">
       <div className="page">
         <div className="faq-divider" aria-hidden="true">
-          <Crescent className="size-4 text-champagne" />
+          <Crescent className="size-4 text-gold" />
         </div>
         <div className="mx-auto max-w-[62rem]">
           <SectionLabel n={6}>Questions</SectionLabel>
